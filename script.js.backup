@@ -1,0 +1,2110 @@
+/**
+ * PromptGenerator配布ページ JavaScript
+ * GitHub Pages対応のzipファイル動的検出とダウンロードリンク生成
+ */
+
+class DistributionPageManager {
+    constructor() {
+        this.zipFiles = [];
+        this.currentTheme = 'midnight-purple'; // デフォルトテーマ
+        this.themes = {
+            'midnight-purple': {
+                name: '🌙 Midnight Purple',
+                description: 'エレガントなダークパープルテーマ'
+            },
+            'cyber-blue': {
+                name: '🌊 Cyber Blue', 
+                description: 'サイバーパンク風ブルーテーマ'
+            }
+        };
+        this.init();
+    }
+
+    /**
+     * 初期化処理
+     */
+    async init() {
+        try {
+            // ページ読み込み完了時の処理
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => this.onDOMContentLoaded());
+            } else {
+                this.onDOMContentLoaded();
+            }
+        } catch (error) {
+            console.error('配布ページの初期化エラー:', error);
+        }
+    }
+
+    /**
+     * DOM読み込み完了時の処理
+     */
+    async onDOMContentLoaded() {
+        try {
+            // テーマシステムを初期化
+            this.initializeThemeSystem();
+            
+            // 最終更新日時を設定
+            this.updateLastModified();
+            
+            // zipファイルを検出してダウンロードリンクを生成
+            await this.detectAndGenerateDownloadLinks();
+            
+            // スムーススクロールの設定
+            this.setupSmoothScroll();
+            
+            // タブシステムの設定
+            this.setupTabSystem();
+            
+            console.log('✅ 配布ページの初期化が完了しました');
+        } catch (error) {
+            console.error('DOM読み込み時のエラー:', error);
+            this.showErrorMessage('ページの初期化中にエラーが発生しました');
+        }
+    }
+
+    /**
+     * テーマシステムの初期化
+     */
+    initializeThemeSystem() {
+        try {
+            // 保存されたテーマ設定を読み込み
+            const savedTheme = localStorage.getItem('prompt-generator-theme');
+            if (savedTheme && this.themes[savedTheme]) {
+                this.currentTheme = savedTheme;
+            }
+
+            // テーマ選択ボタンを生成
+            this.createThemeSelector();
+            
+            // 初期テーマを適用
+            this.applyTheme(this.currentTheme);
+            
+            console.log(`🎨 テーマシステム初期化完了: ${this.currentTheme}`);
+        } catch (error) {
+            console.error('テーマシステム初期化エラー:', error);
+        }
+    }
+
+    /**
+     * テーマ選択ボタンを作成
+     */
+    createThemeSelector() {
+        const headerButtons = document.querySelector('.header-buttons');
+        if (!headerButtons) return;
+
+        // テーマ選択ボタンコンテナ
+        const themeContainer = document.createElement('div');
+        themeContainer.className = 'theme-selector';
+        themeContainer.style.cssText = `
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        `;
+
+        // テーマ切り替えボタン
+        const themeButton = document.createElement('button');
+        themeButton.className = 'btn theme-btn';
+        themeButton.innerHTML = `
+            <span class="theme-icon">🎨</span>
+            <span class="theme-name">${this.themes[this.currentTheme].name}</span>
+        `;
+        themeButton.style.cssText = `
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        `;
+
+        // テーマメニュー
+        const themeMenu = document.createElement('div');
+        themeMenu.className = 'theme-menu';
+        themeMenu.style.cssText = `
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 15px var(--shadow-color);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            min-width: 200px;
+        `;
+
+        // テーマオプションを生成
+        Object.entries(this.themes).forEach(([themeKey, themeInfo]) => {
+            const themeOption = document.createElement('button');
+            themeOption.className = 'theme-option';
+            themeOption.innerHTML = `
+                <div class="theme-preview ${themeKey}"></div>
+                <div class="theme-info">
+                    <div class="theme-title">${themeInfo.name}</div>
+                    <div class="theme-desc">${themeInfo.description}</div>
+                </div>
+                ${this.currentTheme === themeKey ? '<span class="theme-check">✓</span>' : ''}
+            `;
+            themeOption.style.cssText = `
+                width: 100%;
+                padding: 1rem;
+                border: none;
+                background: transparent;
+                color: var(--text-primary);
+                text-align: left;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                border-bottom: 1px solid var(--border-color);
+            `;
+
+            themeOption.addEventListener('click', () => {
+                this.switchTheme(themeKey);
+                this.hideThemeMenu();
+            });
+
+            themeOption.addEventListener('mouseenter', () => {
+                themeOption.style.background = 'var(--bg-tertiary)';
+            });
+
+            themeOption.addEventListener('mouseleave', () => {
+                themeOption.style.background = 'transparent';
+            });
+
+            themeMenu.appendChild(themeOption);
+        });
+
+        // イベントリスナー
+        themeButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleThemeMenu();
+        });
+
+        themeButton.addEventListener('mouseenter', () => {
+            themeButton.style.background = 'rgba(255, 255, 255, 0.2)';
+        });
+
+        themeButton.addEventListener('mouseleave', () => {
+            themeButton.style.background = 'rgba(255, 255, 255, 0.1)';
+        });
+
+        // 外部クリックでメニューを閉じる
+        document.addEventListener('click', () => {
+            this.hideThemeMenu();
+        });
+
+        themeContainer.appendChild(themeButton);
+        themeContainer.appendChild(themeMenu);
+        headerButtons.insertBefore(themeContainer, headerButtons.firstChild);
+
+        // メニュー参照を保存
+        this.themeButton = themeButton;
+        this.themeMenu = themeMenu;
+    }
+
+    /**
+     * テーマメニューの表示切り替え
+     */
+    toggleThemeMenu() {
+        const isVisible = this.themeMenu.style.opacity === '1';
+        if (isVisible) {
+            this.hideThemeMenu();
+        } else {
+            this.showThemeMenu();
+        }
+    }
+
+    /**
+     * テーマメニューを表示
+     */
+    showThemeMenu() {
+        this.themeMenu.style.opacity = '1';
+        this.themeMenu.style.visibility = 'visible';
+        this.themeMenu.style.transform = 'translateY(0)';
+    }
+
+    /**
+     * テーマメニューを非表示
+     */
+    hideThemeMenu() {
+        this.themeMenu.style.opacity = '0';
+        this.themeMenu.style.visibility = 'hidden';
+        this.themeMenu.style.transform = 'translateY(-10px)';
+    }
+
+    /**
+     * テーマを切り替え
+     */
+    switchTheme(themeKey) {
+        if (!this.themes[themeKey] || themeKey === this.currentTheme) return;
+
+        this.currentTheme = themeKey;
+        this.applyTheme(themeKey);
+        this.saveTheme(themeKey);
+        this.updateThemeButton();
+        this.updateThemeMenu();
+
+        console.log(`🎨 テーマ切り替え: ${this.themes[themeKey].name}`);
+    }
+
+    /**
+     * テーマを適用
+     */
+    applyTheme(themeKey) {
+        const body = document.body;
+        
+        // 既存のテーマクラスを削除
+        Object.keys(this.themes).forEach(theme => {
+            body.removeAttribute(`data-theme`);
+        });
+
+        // 新しいテーマを適用
+        if (themeKey !== 'midnight-purple') { // デフォルトテーマでない場合のみ属性を設定
+            body.setAttribute('data-theme', themeKey);
+        }
+
+        // テーマ切り替えアニメーション
+        body.style.transition = 'all 0.5s ease';
+        setTimeout(() => {
+            body.style.transition = '';
+        }, 500);
+    }
+
+    /**
+     * テーマ設定をローカルストレージに保存
+     */
+    saveTheme(themeKey) {
+        try {
+            localStorage.setItem('prompt-generator-theme', themeKey);
+        } catch (error) {
+            console.warn('テーマ設定の保存に失敗:', error);
+        }
+    }
+
+    /**
+     * テーマボタンの表示を更新
+     */
+    updateThemeButton() {
+        if (!this.themeButton) return;
+
+        const themeNameSpan = this.themeButton.querySelector('.theme-name');
+        if (themeNameSpan) {
+            themeNameSpan.textContent = this.themes[this.currentTheme].name;
+        }
+    }
+
+    /**
+     * テーマメニューの選択状態を更新
+     */
+    updateThemeMenu() {
+        if (!this.themeMenu) return;
+
+        const options = this.themeMenu.querySelectorAll('.theme-option');
+        options.forEach((option, index) => {
+            const themeKey = Object.keys(this.themes)[index];
+            const checkMark = option.querySelector('.theme-check');
+            
+            if (themeKey === this.currentTheme) {
+                if (!checkMark) {
+                    const check = document.createElement('span');
+                    check.className = 'theme-check';
+                    check.textContent = '✓';
+                    check.style.cssText = 'color: var(--success-color); font-weight: bold;';
+                    option.appendChild(check);
+                }
+            } else {
+                if (checkMark) {
+                    checkMark.remove();
+                }
+            }
+        });
+    }
+
+    /**
+     * 最終更新日時を設定
+     */
+    updateLastModified() {
+        const lastUpdatedElement = document.getElementById('lastUpdated');
+        if (lastUpdatedElement) {
+            const now = new Date();
+            const formatted = now.toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            lastUpdatedElement.textContent = formatted;
+        }
+    }
+
+    /**
+     * zipファイルを検出してダウンロードリンクを生成
+     */
+    async detectAndGenerateDownloadLinks() {
+        const downloadButtonsContainer = document.getElementById('downloadButtons');
+        if (!downloadButtonsContainer) {
+            console.error('ダウンロードボタンコンテナが見つかりません');
+            return;
+        }
+
+        try {
+            // GitHub Pages環境での静的ファイル検出
+            const zipFiles = await this.detectZipFiles();
+            
+            if (zipFiles.length === 0) {
+                this.showNoFilesMessage(downloadButtonsContainer);
+                return;
+            }
+
+            // ダウンロードリンクを生成
+            this.generateDownloadLinks(downloadButtonsContainer, zipFiles);
+            
+        } catch (error) {
+            console.error('zipファイル検出エラー:', error);
+            this.showErrorMessage('配布ファイルの検出中にエラーが発生しました', downloadButtonsContainer);
+        }
+    }
+
+    /**
+     * zipファイルを検出（file://プロトコル対応）
+     */
+    async detectZipFiles() {
+        // file://プロトコルの場合、既知のファイルリストから直接検出
+        if (window.location.protocol === 'file:') {
+            console.log('📄 file://プロトコル検出 - 既知ファイルリストを使用');
+            return this.getStaticFileList();
+        }
+
+        try {
+            // HTTP/HTTPSの場合は動的JSON検出を使用
+            const response = await fetch('available-files.json');
+            if (response.ok) {
+                const data = await response.json();
+                console.log(`📋 JSONファイルから${data.count}件のzipファイルを検出`);
+                return data.files || [];
+            }
+        } catch (error) {
+            console.log('📄 JSONファイルが見つからないため、既知ファイルリストを使用');
+        }
+
+        // フォールバック: 既知ファイルリスト
+        return this.getStaticFileList();
+    }
+
+    /**
+     * 静的ファイルリストを取得（file://プロトコル用）
+     */
+    getStaticFileList() {
+        // 実際に存在する既知のファイルリスト（手動更新）
+        const staticFiles = [
+
+            {
+                name: "PromptGenerator.zip",
+                url: "downloads/PromptGenerator.zip",
+                size: 729098,
+                lastModified: "2025-07-26T22:06:17.921318"
+            },
+            {
+                name: "PromptGenerator_v1.0.0_20250726_220617.zip",
+                url: "downloads/PromptGenerator_v1.0.0_20250726_220617.zip",
+                size: 729098,
+                lastModified: "2025-07-26T22:06:17.921318"
+            },
+            {
+                name: "PromptGenerator_v1.0.0_20250726_021311.zip",
+                url: "downloads/PromptGenerator_v1.0.0_20250726_021311.zip",
+                size: 729286,
+                lastModified: "2025-07-26T02:13:11"
+            },
+            {
+                name: "PromptGenerator_v1.0.0_20250726_021211.zip",
+                url: "downloads/PromptGenerator_v1.0.0_20250726_021211.zip",
+                size: 729286,
+                lastModified: "2025-07-26T02:12:11"
+            }
+        ];];
+        
+        console.log(`📦 静的ファイルリストから${staticFiles.length}件のzipファイルを検出`);
+        return staticFiles;
+    }
+
+    /**
+     * zipファイルをフォールバック検出（従来方式）
+     */
+    async detectZipFilesFallback() {
+        const zipFiles = [];
+        
+        // downloadsフォルダ内の実際に存在するファイル名を直接チェック
+        const knownFiles = [
+            'downloads/PromptGenerator.zip',           // 最新版（優先）
+            'downloads/PromptGenerator_latest.zip',
+            'downloads/PromptGenerator_v1.1.0.zip',
+            'downloads/PromptGenerator_v1.0.0.zip'
+        ];
+
+        // 日付ベースのパターンも履歴ファイル用に追加
+        const today = new Date();
+        const dateStr = today.toISOString().slice(0, 10).replace(/-/g, '');
+        knownFiles.push(`downloads/PromptGenerator_v*_${dateStr}_*.zip`);
+
+        // ファイル存在チェック
+        for (const candidate of knownFiles) {
+            try {
+                const response = await fetch(candidate, { method: 'HEAD' });
+                if (response.ok) {
+                    const size = response.headers.get('content-length');
+                    zipFiles.push({
+                        name: candidate,
+                        url: candidate,
+                        size: size ? parseInt(size) : null,
+                        lastModified: response.headers.get('last-modified')
+                    });
+                }
+            } catch (error) {
+                // ファイルが存在しない場合は無視
+                continue;
+            }
+        }
+
+        // ファイル名でソート（新しいものが先頭）
+        zipFiles.sort((a, b) => {
+            // バージョン番号とタイムスタンプで比較
+            const aMatch = a.name.match(/v(\d+\.\d+\.\d+).*?(\d{8}_\d{6})/);
+            const bMatch = b.name.match(/v(\d+\.\d+\.\d+).*?(\d{8}_\d{6})/);
+            
+            if (aMatch && bMatch) {
+                // タイムスタンプで比較（新しい順）
+                return bMatch[2].localeCompare(aMatch[2]);
+            }
+            
+            // ファイル名でソート
+            return b.name.localeCompare(a.name);
+        });
+
+        return zipFiles;
+    }
+
+    /**
+     * ダウンロードリンクを生成
+     */
+    generateDownloadLinks(container, zipFiles) {
+        container.innerHTML = '';
+
+        // 最新版を強調表示
+        const latestFile = zipFiles[0];
+        if (latestFile) {
+            const latestLink = this.createDownloadButton(latestFile, true);
+            container.appendChild(latestLink);
+        }
+
+        // その他のバージョンがある場合（アコーディオン形式）
+        if (zipFiles.length > 1) {
+            const otherVersionsContainer = this.createVersionsAccordion(zipFiles.slice(1));
+            container.appendChild(otherVersionsContainer);
+        }
+
+        // 使用方法の補足説明
+        const instructionDiv = document.createElement('div');
+        instructionDiv.className = 'download-instructions';
+        instructionDiv.innerHTML = `
+            <div style="margin-top: 2rem; padding: 1rem; background: var(--light-gray); border-radius: var(--border-radius); font-size: var(--font-size-sm);">
+                <h4 style="margin-bottom: 0.5rem; color: var(--primary-color);">📋 インストール方法</h4>
+                <ol style="margin: 0; padding-left: 1.5rem; color: var(--dark-gray);">
+                    <li>上記のボタンをクリックしてzipファイルをダウンロード</li>
+                    <li>ダウンロードしたzipファイルを適当な場所に展開</li>
+                    <li>Chrome拡張機能管理画面（chrome://extensions/）でデベロッパーモードを有効化</li>
+                    <li>「パッケージ化されていない拡張機能を読み込む」で展開したフォルダを選択</li>
+                </ol>
+            </div>
+        `;
+        container.appendChild(instructionDiv);
+    }
+
+    /**
+     * バージョン履歴アコーディオンを作成
+     */
+    createVersionsAccordion(historyFiles) {
+        const accordionContainer = document.createElement('div');
+        accordionContainer.className = 'versions-accordion';
+        accordionContainer.style.cssText = `
+            margin-top: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-lg);
+            background: var(--bg-card);
+            overflow: hidden;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        `;
+
+        // アコーディオンヘッダー
+        const accordionHeader = document.createElement('button');
+        accordionHeader.className = 'accordion-header';
+        accordionHeader.innerHTML = `
+            <div class="accordion-title">
+                <span class="accordion-icon">📋</span>
+                <span class="accordion-text">その他のバージョン (${historyFiles.length}件)</span>
+                <span class="accordion-arrow">▼</span>
+            </div>
+        `;
+        accordionHeader.style.cssText = `
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+        `;
+
+        // アコーディオンコンテンツ
+        const accordionContent = document.createElement('div');
+        accordionContent.className = 'accordion-content';
+        accordionContent.style.cssText = `
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+        `;
+
+        // 履歴ファイルを追加
+        const contentInner = document.createElement('div');
+        contentInner.className = 'accordion-content-inner';
+        contentInner.style.cssText = `
+            padding: 1rem 1.5rem;
+        `;
+
+        historyFiles.forEach(file => {
+            const link = this.createDownloadButton(file, false);
+            link.style.marginBottom = '1rem';
+            contentInner.appendChild(link);
+        });
+
+        accordionContent.appendChild(contentInner);
+
+        // クリックイベント
+        let isExpanded = false;
+        accordionHeader.addEventListener('click', () => {
+            isExpanded = !isExpanded;
+            
+            const arrow = accordionHeader.querySelector('.accordion-arrow');
+            const content = accordionContent;
+            
+            if (isExpanded) {
+                // 展開
+                arrow.textContent = '▲';
+                arrow.style.transform = 'rotate(180deg)';
+                accordionHeader.style.background = 'var(--bg-tertiary)';
+                
+                // コンテンツの高さを計算して設定
+                const contentHeight = contentInner.scrollHeight + 32; // padding込み
+                content.style.maxHeight = `${contentHeight}px`;
+                content.style.padding = '0';
+                
+                console.log(`📂 履歴バージョン展開: ${historyFiles.length}件表示`);
+            } else {
+                // 収縮
+                arrow.textContent = '▼';
+                arrow.style.transform = 'rotate(0deg)';
+                accordionHeader.style.background = 'transparent';
+                content.style.maxHeight = '0';
+                content.style.padding = '0';
+                
+                console.log(`📁 履歴バージョン収縮`);
+            }
+        });
+
+        // ホバーエフェクト
+        accordionHeader.addEventListener('mouseenter', () => {
+            if (!isExpanded) {
+                accordionHeader.style.background = 'var(--bg-tertiary)';
+            }
+        });
+
+        accordionHeader.addEventListener('mouseleave', () => {
+            if (!isExpanded) {
+                accordionHeader.style.background = 'transparent';
+            }
+        });
+
+        accordionContainer.appendChild(accordionHeader);
+        accordionContainer.appendChild(accordionContent);
+
+        return accordionContainer;
+    }
+
+    /**
+     * ダウンロードボタンを作成
+     */
+    createDownloadButton(file, isLatest = false) {
+        const container = document.createElement('div');
+        container.className = 'download-item';
+        container.style.cssText = `
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: ${isLatest ? 'var(--white)' : 'var(--light-gray)'};
+            border-radius: var(--border-radius-lg);
+            ${isLatest ? 'box-shadow: var(--shadow-md); border: 2px solid var(--primary-color);' : ''}
+        `;
+
+        const button = document.createElement('a');
+        button.href = file.url;
+        button.className = `btn ${isLatest ? 'btn-download' : 'btn-secondary'}`;
+        button.download = file.name;
+        button.style.cssText = `
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            margin-bottom: 0.5rem;
+            ${isLatest ? '' : 'background: var(--primary-color); color: var(--white);'}
+        `;
+
+        // ファイル情報の表示
+        const fileInfo = this.extractFileInfo(file.name);
+        button.innerHTML = `
+            <span>${isLatest ? '⭐' : '📦'}</span>
+            <span>${isLatest ? '最新版ダウンロード' : 'ダウンロード'}</span>
+            <span style="font-size: var(--font-size-sm); opacity: 0.8;">
+                ${fileInfo.version ? `v${fileInfo.version}` : ''}
+                ${fileInfo.date ? ` (${fileInfo.date})` : ''}
+            </span>
+        `;
+
+        // ファイル詳細情報
+        const details = document.createElement('div');
+        details.className = 'file-details';
+        details.style.cssText = 'font-size: var(--font-size-sm); color: var(--dark-gray); margin-top: 0.5rem;';
+        
+        const detailsHTML = [];
+        detailsHTML.push(`📁 ファイル名: ${file.name}`);
+        if (file.size) {
+            const sizeStr = this.formatFileSize(file.size);
+            detailsHTML.push(`📊 サイズ: ${sizeStr}`);
+        }
+        if (file.lastModified) {
+            const modifiedDate = new Date(file.lastModified).toLocaleString('ja-JP');
+            detailsHTML.push(`🕒 更新日時: ${modifiedDate}`);
+        }
+        
+        details.innerHTML = detailsHTML.join('<br>');
+
+        container.appendChild(button);
+        container.appendChild(details);
+
+        return container;
+    }
+
+    /**
+     * ファイル名から情報を抽出
+     */
+    extractFileInfo(filename) {
+        const info = { version: null, date: null };
+        
+        // バージョン情報を抽出
+        const versionMatch = filename.match(/v(\d+\.\d+\.\d+)/);
+        if (versionMatch) {
+            info.version = versionMatch[1];
+        }
+
+        // 日付情報を抽出
+        const dateMatch = filename.match(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/);
+        if (dateMatch) {
+            const [, year, month, day, hour, minute] = dateMatch;
+            info.date = `${year}/${month}/${day} ${hour}:${minute}`;
+        }
+
+        return info;
+    }
+
+    /**
+     * ファイルサイズをフォーマット
+     */
+    formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    /**
+     * ファイルが見つからない場合のメッセージを表示
+     */
+    showNoFilesMessage(container) {
+        container.innerHTML = `
+            <div class="no-files-message" style="text-align: center; padding: 2rem; background: var(--light-gray); border-radius: var(--border-radius-lg);">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+                <h3 style="color: var(--primary-color); margin-bottom: 1rem;">配布ファイルが見つかりません</h3>
+                <p style="color: var(--dark-gray); margin-bottom: 1.5rem;">
+                    配布用のzipファイルをまだ生成していないようです。<br>
+                    以下の手順で配布ファイルを生成してください。
+                </p>
+                <div style="background: var(--white); padding: 1.5rem; border-radius: var(--border-radius); text-align: left; max-width: 500px; margin: 0 auto;">
+                    <h4 style="color: var(--primary-color); margin-bottom: 1rem;">🔧 配布ファイル生成手順</h4>
+                    <ol style="color: var(--dark-gray); line-height: 1.8;">
+                        <li>プロジェクトの「配布ページ」フォルダを開く</li>
+                        <li><code style="background: var(--medium-gray); padding: 0.2rem 0.5rem; border-radius: 4px;">create_distribution.bat</code> をダブルクリック実行</li>
+                        <li>zipファイルが自動生成されます</li>
+                        <li>このページを再読み込みしてください</li>
+                    </ol>
+                </div>
+                <button onclick="location.reload()" class="btn btn-primary" style="margin-top: 1rem;">
+                    🔄 ページを再読み込み
+                </button>
+            </div>
+        `;
+    }
+
+    /**
+     * エラーメッセージを表示
+     */
+    showErrorMessage(message, container = null) {
+        const errorHTML = `
+            <div class="error-message" style="text-align: center; padding: 2rem; background: var(--error-color); color: white; border-radius: var(--border-radius-lg);">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">⚠️</div>
+                <h3 style="margin-bottom: 1rem;">エラーが発生しました</h3>
+                <p>${message}</p>
+                <button onclick="location.reload()" class="btn" style="margin-top: 1rem; background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                    🔄 ページを再読み込み
+                </button>
+            </div>
+        `;
+
+        if (container) {
+            container.innerHTML = errorHTML;
+        } else {
+            console.error(message);
+        }
+    }
+
+    /**
+     * タブシステムの設定
+     */
+    setupTabSystem() {
+        try {
+            const tabButtons = document.querySelectorAll('.setup-tab-btn');
+            const tabContents = document.querySelectorAll('.setup-tab-content');
+            
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetTab = button.getAttribute('data-tab');
+                    
+                    // 全てのタブボタンとコンテンツから active クラスを削除
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // クリックされたタブボタンを active に
+                    button.classList.add('active');
+                    
+                    // 対応するコンテンツを active に
+                    const targetContent = document.getElementById(`${targetTab}-content`);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                    }
+                    
+                    console.log(`📋 タブ切り替え: ${targetTab}`);
+                });
+            });
+            
+            console.log('🎯 タブシステム初期化完了');
+        } catch (error) {
+            console.error('タブシステム初期化エラー:', error);
+        }
+    }
+
+    /**
+     * スムーススクロールの設定
+     */
+    setupSmoothScroll() {
+        // アンカーリンクのスムーススクロール
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    }
+}
+
+/**
+ * インタラクティブチュートリアル管理クラス
+ */
+class InteractiveTutorialManager {
+    constructor() {
+        this.currentTab = 'search';
+        this.tutorialStates = {};
+        this.dummyData = this.initializeDummyData();
+        this.init();
+    }
+
+    /**
+     * ダミーデータの初期化
+     */
+    initializeDummyData() {
+        return {
+            // 検索用マスターデータ
+            masterData: [
+                { category: 'キャラクター(女性)', item: '美少女', weight: 1.0 },
+                { category: 'キャラクター(女性)', item: '可愛い女の子', weight: 0.9 },
+                { category: 'キャラクター(女性)', item: 'アニメガール', weight: 0.8 },
+                { category: '髪型', item: 'ロングヘア', weight: 0.8 },
+                { category: '髪型', item: 'ツインテール', weight: 0.7 },
+                { category: '髪型', item: 'ショートヘア', weight: 0.6 },
+                { category: '目', item: '大きな瞳', weight: 0.7 },
+                { category: '目', item: '美しい目', weight: 0.6 },
+                { category: '服装', item: '学校制服', weight: 0.8 },
+                { category: '服装', item: 'カジュアル', weight: 0.7 },
+                { category: 'ポーズ', item: '立ちポーズ', weight: 0.6 },
+                { category: 'ポーズ', item: '座りポーズ', weight: 0.5 },
+                { category: '背景', item: '学校教室', weight: 0.8 },
+                { category: '背景', item: '公園', weight: 0.7 },
+                { category: '背景', item: '街並み', weight: 0.6 },
+            ],
+            
+            // 編集リスト初期データ
+            editList: [
+                { text: '美少女', weight: 1.3, category: 'キャラクター(女性)' },
+                { text: 'ロングヘア', weight: 0.8, category: '髪型' },
+                { text: '大きな瞳', weight: 0.7, category: '目' },
+                { text: '学校制服', weight: 0.8, category: '服装' }
+            ],
+            
+            // 辞書データ
+            dictionaryData: [
+                { category: 'キャラクター(女性)', prompt: '美少女' },
+                { category: '髪型', prompt: 'ロングヘア' },
+                { category: '髪型', prompt: 'ツインテール' },
+                { category: '服装', prompt: '学校制服' },
+                { category: 'ポーズ', prompt: '立ちポーズ' }
+            ],
+            
+            // スロットデータ
+            slots: {
+                1: null,
+                2: null,
+                3: null
+            },
+            
+            // Generate履歴
+            generateHistory: [
+                { prompt: 'beautiful anime girl, long hair, big eyes', date: '2024/07/25 14:30' },
+                { prompt: 'cute anime girl, twin tails, school uniform', date: '2024/07/25 13:15' },
+                { prompt: 'anime girl, short hair, casual clothes', date: '2024/07/25 12:45' }
+            ]
+        };
+    }
+
+    /**
+     * 初期化処理
+     */
+    init() {
+        this.initializeTutorialStates();
+        this.setupTutorialTabs();
+        this.setupAllTutorials();
+        console.log('🎮 インタラクティブチュートリアル初期化完了');
+    }
+
+    /**
+     * チュートリアル状態の初期化
+     */
+    initializeTutorialStates() {
+        this.tutorialStates = {
+            search: { currentStep: 0, maxSteps: 5, currentPrompts: [] },
+            edit: { currentStep: 0, maxSteps: 4, editList: [...this.dummyData.editList] },
+            dictionary: { currentStep: 0, maxSteps: 4, newItem: null },
+            slot: { currentStep: 0, maxSteps: 5, savedSlots: {} },
+            header: { currentStep: 0, maxSteps: 3, historyVisible: false }
+        };
+    }
+
+    /**
+     * チュートリアルタブの設定
+     */
+    setupTutorialTabs() {
+        const tabButtons = document.querySelectorAll('.tutorial-tab-btn');
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const targetTab = button.getAttribute('data-tab');
+                this.switchTutorialTab(targetTab);
+            });
+        });
+    }
+
+    /**
+     * チュートリアルタブの切り替え
+     */
+    switchTutorialTab(tabName) {
+        // タブボタンの状態更新
+        document.querySelectorAll('.tutorial-tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+
+        // コンテンツの表示切り替え
+        document.querySelectorAll('.tutorial-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        document.getElementById(`${tabName}-tutorial`).classList.add('active');
+
+        this.currentTab = tabName;
+        this.resetCurrentTutorial();
+        console.log(`🎯 チュートリアルタブ切り替え: ${tabName}`);
+    }
+
+    /**
+     * 全チュートリアルの設定
+     */
+    setupAllTutorials() {
+        this.setupSearchTutorial();
+        this.setupEditTutorial();
+        this.setupDictionaryTutorial();
+        this.setupSlotTutorial();
+        this.setupHeaderTutorial();
+    }
+
+    /**
+     * 検索タブチュートリアルの設定
+     */
+    setupSearchTutorial() {
+        const state = this.tutorialStates.search;
+        
+        // 検索ボタンクリック
+        document.getElementById('mock-search-btn').addEventListener('click', () => {
+            this.executeSearchStep();
+        });
+
+        // 検索入力でEnterキー
+        document.getElementById('mock-search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.executeSearchStep();
+            }
+        });
+
+        // カテゴリフィルター
+        document.querySelectorAll('#mock-category-filters .category-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.handleCategoryFilter(btn);
+            });
+        });
+
+        // コントロールボタン
+        document.getElementById('search-next-btn').addEventListener('click', () => {
+            this.nextSearchStep();
+        });
+        document.getElementById('search-prev-btn').addEventListener('click', () => {
+            this.prevSearchStep();
+        });
+        document.getElementById('search-reset-btn').addEventListener('click', () => {
+            this.resetSearchTutorial();
+        });
+
+        // コピーボタン
+        document.getElementById('mock-copy-btn').addEventListener('click', () => {
+            this.copyCurrentPrompt();
+        });
+
+        this.updateSearchStep();
+    }
+
+    /**
+     * 検索ステップの実行
+     */
+    executeSearchStep() {
+        const state = this.tutorialStates.search;
+        const searchInput = document.getElementById('mock-search-input');
+        const searchTerm = searchInput.value.trim();
+
+        if (state.currentStep === 0 && searchTerm === '美少女') {
+            this.displaySearchResults(searchTerm);
+            state.currentStep = 1;
+            this.updateSearchStep();
+        }
+    }
+
+    /**
+     * 検索結果の表示
+     */
+    displaySearchResults(searchTerm) {
+        const resultsContainer = document.getElementById('results-list');
+        const resultsCount = document.getElementById('results-count');
+        
+        let filteredResults = this.dummyData.masterData.filter(item => 
+            item.item.includes(searchTerm) || item.category.includes(searchTerm)
+        );
+
+        resultsCount.textContent = `${filteredResults.length}件見つかりました`;
+        
+        resultsContainer.innerHTML = '';
+        filteredResults.forEach((item, index) => {
+            const resultElement = document.createElement('div');
+            resultElement.className = 'result-item';
+            resultElement.innerHTML = `
+                <div>
+                    <div class="result-text">${item.item}</div>
+                    <div class="result-category">${item.category}</div>
+                </div>
+                <button class="result-add-btn" data-item="${item.item}" data-category="${item.category}">追加</button>
+            `;
+            
+            resultElement.querySelector('.result-add-btn').addEventListener('click', () => {
+                this.addPromptFromSearch(item);
+            });
+            
+            resultsContainer.appendChild(resultElement);
+        });
+    }
+
+    /**
+     * 検索からプロンプト追加
+     */
+    addPromptFromSearch(item) {
+        const state = this.tutorialStates.search;
+        state.currentPrompts.push(item.item);
+        this.updateCurrentPromptDisplay();
+        
+        // ステップ進行
+        if (state.currentStep === 1 && item.item === '美少女') {
+            state.currentStep = 2;
+            this.updateSearchStep();
+        } else if (state.currentStep === 3) {
+            state.currentStep = 4;
+            this.updateSearchStep();
+        }
+    }
+
+    /**
+     * 現在のプロンプト表示を更新
+     */
+    updateCurrentPromptDisplay() {
+        const state = this.tutorialStates.search;
+        const display = document.getElementById('current-prompt-display');
+        
+        if (state.currentPrompts.length === 0) {
+            display.textContent = 'プロンプトを追加してください';
+        } else {
+            display.textContent = state.currentPrompts.join(', ');
+        }
+    }
+
+    /**
+     * カテゴリフィルター処理
+     */
+    handleCategoryFilter(btn) {
+        document.querySelectorAll('#mock-category-filters .category-btn').forEach(b => {
+            b.classList.remove('active');
+        });
+        btn.classList.add('active');
+
+        const state = this.tutorialStates.search;
+        if (state.currentStep === 1) {
+            state.currentStep = 2;
+            this.updateSearchStep();
+            
+            // フィルター結果を表示
+            const category = btn.getAttribute('data-category');
+            if (category !== 'all') {
+                const filteredResults = this.dummyData.masterData.filter(item => 
+                    item.category.includes('キャラクター')
+                );
+                document.getElementById('results-count').textContent = `${filteredResults.length}件に絞り込まれました`;
+            }
+        }
+    }
+
+    /**
+     * 検索ステップの更新
+     */
+    updateSearchStep() {
+        const state = this.tutorialStates.search;
+        const messages = [
+            '検索ボックスに「美少女」と入力して検索してみましょう！',
+            '検索結果が表示されました！「キャラクター」カテゴリをクリックして絞り込んでみましょう。',
+            '結果が絞り込まれました！「美少女」をクリックして追加してみましょう。',
+            '素晴らしい！さらに「ロングヘア」と「大きな瞳」も追加してみましょう。',
+            'プロンプトが組み合わされました！コピーボタンでクリップボードにコピーできます。'
+        ];
+
+        document.getElementById('search-guide-message').textContent = messages[state.currentStep];
+        document.getElementById('search-progress-text').textContent = `ステップ ${state.currentStep + 1}/${state.maxSteps}`;
+        document.getElementById('search-progress').style.width = `${((state.currentStep + 1) / state.maxSteps) * 100}%`;
+
+        // ボタン状態の更新
+        document.getElementById('search-prev-btn').disabled = state.currentStep === 0;
+        document.getElementById('search-next-btn').disabled = state.currentStep >= state.maxSteps - 1;
+    }
+
+    /**
+     * 検索ステップを次へ
+     */
+    nextSearchStep() {
+        const state = this.tutorialStates.search;
+        if (state.currentStep < state.maxSteps - 1) {
+            state.currentStep++;
+            this.updateSearchStep();
+            
+            // 自動実行処理
+            if (state.currentStep === 1) {
+                // 検索結果を表示
+                this.displaySearchResults('美少女');
+            }
+        }
+    }
+
+    /**
+     * 検索ステップを前へ
+     */
+    prevSearchStep() {
+        const state = this.tutorialStates.search;
+        if (state.currentStep > 0) {
+            state.currentStep--;
+            this.updateSearchStep();
+        }
+    }
+
+    /**
+     * 検索チュートリアルをリセット
+     */
+    resetSearchTutorial() {
+        const state = this.tutorialStates.search;
+        state.currentStep = 0;
+        state.currentPrompts = [];
+        
+        document.getElementById('mock-search-input').value = '';
+        document.getElementById('results-list').innerHTML = '';
+        document.getElementById('results-count').textContent = '検索してください';
+        
+        this.updateCurrentPromptDisplay();
+        this.updateSearchStep();
+    }
+
+    /**
+     * 編集タブチュートリアルの設定
+     */
+    setupEditTutorial() {
+        // 翻訳ボタン
+        document.getElementById('mock-translate-btn').addEventListener('click', () => {
+            this.executeTranslation();
+        });
+
+        // Generateボタン
+        document.getElementById('mock-generate-btn').addEventListener('click', () => {
+            this.executeGenerate();
+        });
+
+        // コントロールボタン
+        document.getElementById('edit-next-btn').addEventListener('click', () => {
+            this.nextEditStep();
+        });
+        document.getElementById('edit-prev-btn').addEventListener('click', () => {
+            this.prevEditStep();
+        });
+        document.getElementById('edit-reset-btn').addEventListener('click', () => {
+            this.resetEditTutorial();
+        });
+
+        // コピーボタン
+        document.getElementById('edit-copy-btn').addEventListener('click', () => {
+            this.copyFinalPrompt();
+        });
+
+        this.renderEditList();
+        this.updateEditStep();
+    }
+
+    /**
+     * 編集リストの描画
+     */
+    renderEditList() {
+        const state = this.tutorialStates.edit;
+        const container = document.getElementById('mock-edit-list');
+        
+        container.innerHTML = '';
+        
+        if (state.editList.length === 0) {
+            container.innerHTML = '<div style="color: #999; text-align: center; padding: 2rem;">編集リストは空です</div>';
+            return;
+        }
+
+        state.editList.forEach((item, index) => {
+            const editElement = document.createElement('div');
+            editElement.className = 'edit-item';
+            editElement.innerHTML = `
+                <div class="drag-handle">⋮⋮</div>
+                <div class="edit-item-content">
+                    <div class="edit-item-text">${item.text}</div>
+                    <input type="range" class="weight-slider" min="0.1" max="2.0" step="0.1" value="${item.weight}">
+                    <div class="weight-display">${item.weight}</div>
+                </div>
+                <div class="edit-item-actions">
+                    <button class="edit-action-btn" onclick="this.closest('.edit-item').remove()">🗑️</button>
+                </div>
+            `;
+
+            // 重みスライダーのイベント
+            const slider = editElement.querySelector('.weight-slider');
+            const display = editElement.querySelector('.weight-display');
+            slider.addEventListener('input', (e) => {
+                const newWeight = parseFloat(e.target.value);
+                display.textContent = newWeight;
+                item.weight = newWeight;
+                this.updateFinalPrompt();
+
+                // ステップ進行
+                if (state.currentStep === 1) {
+                    state.currentStep = 2;
+                    this.updateEditStep();
+                }
+            });
+
+            container.appendChild(editElement);
+        });
+
+        this.updateFinalPrompt();
+    }
+
+    /**
+     * 最終プロンプトの更新
+     */
+    updateFinalPrompt() {
+        const state = this.tutorialStates.edit;
+        const display = document.getElementById('final-prompt-display');
+        
+        if (state.editList.length === 0) {
+            display.textContent = '編集リストからプロンプトが生成されます';
+            return;
+        }
+
+        const promptParts = state.editList.map(item => {
+            if (item.weight === 1.0) {
+                return item.text;
+            } else {
+                return `(${item.text}:${item.weight})`;
+            }
+        });
+
+        display.textContent = promptParts.join(', ');
+    }
+
+    /**
+     * 翻訳実行
+     */
+    executeTranslation() {
+        const state = this.tutorialStates.edit;
+        
+        // 翻訳中の表示
+        document.getElementById('mock-translate-btn').textContent = '🔄 翻訳中...';
+        document.getElementById('mock-translate-btn').disabled = true;
+
+        setTimeout(() => {
+            // 英語に翻訳
+            state.editList = state.editList.map(item => ({
+                ...item,
+                text: this.translateToEnglish(item.text)
+            }));
+
+            this.renderEditList();
+            
+            document.getElementById('mock-translate-btn').textContent = '🌐 翻訳';
+            document.getElementById('mock-translate-btn').disabled = false;
+
+            // ステップ進行
+            if (state.currentStep === 2) {
+                state.currentStep = 3;
+                this.updateEditStep();
+            }
+        }, 2000);
+    }
+
+    /**
+     * 簡易翻訳関数
+     */
+    translateToEnglish(text) {
+        const translations = {
+            '美少女': 'beautiful anime girl',
+            'ロングヘア': 'long hair',
+            '大きな瞳': 'big eyes',
+            '学校制服': 'school uniform'
+        };
+        return translations[text] || text;
+    }
+
+    /**
+     * Generate実行
+     */
+    executeGenerate() {
+        const state = this.tutorialStates.edit;
+        this.updateFinalPrompt();
+        
+        if (state.currentStep === 3) {
+            state.currentStep = 4;
+            this.updateEditStep();
+        }
+    }
+
+    /**
+     * 編集ステップの更新
+     */
+    updateEditStep() {
+        const state = this.tutorialStates.edit;
+        const messages = [
+            'プロンプトを並び替えて重みを調整し、翻訳してみましょう！',
+            '「美少女」の重みスライダーを1.3に調整してみましょう。',
+            '重みが調整されました！次に翻訳ボタンをクリックして英語に翻訳しましょう。',
+            '翻訳が完了しました！Generateボタンをクリックして最終プロンプトを生成しましょう。',
+            '素晴らしい！完成したプロンプトをコピーして使用できます。'
+        ];
+
+        document.getElementById('edit-guide-message').textContent = messages[state.currentStep];
+        document.getElementById('edit-progress-text').textContent = `ステップ ${state.currentStep + 1}/${state.maxSteps}`;
+        document.getElementById('edit-progress').style.width = `${((state.currentStep + 1) / state.maxSteps) * 100}%`;
+
+        document.getElementById('edit-prev-btn').disabled = state.currentStep === 0;
+        document.getElementById('edit-next-btn').disabled = state.currentStep >= state.maxSteps - 1;
+    }
+
+    /**
+     * 編集ステップを次へ
+     */
+    nextEditStep() {
+        const state = this.tutorialStates.edit;
+        if (state.currentStep < state.maxSteps - 1) {
+            state.currentStep++;
+            this.updateEditStep();
+        }
+    }
+
+    /**
+     * 編集ステップを前へ
+     */
+    prevEditStep() {
+        const state = this.tutorialStates.edit;
+        if (state.currentStep > 0) {
+            state.currentStep--;
+            this.updateEditStep();
+        }
+    }
+
+    /**
+     * 編集チュートリアルをリセット
+     */
+    resetEditTutorial() {
+        const state = this.tutorialStates.edit;
+        state.currentStep = 0;
+        state.editList = [...this.dummyData.editList];
+        
+        this.renderEditList();
+        this.updateEditStep();
+    }
+
+    /**
+     * 辞書タブチュートリアルの設定
+     */
+    setupDictionaryTutorial() {
+        // 新規追加ボタン
+        document.getElementById('mock-add-dictionary-btn').addEventListener('click', () => {
+            this.showDictionaryForm();
+        });
+
+        // 保存ボタン
+        document.getElementById('mock-save-dictionary-btn').addEventListener('click', () => {
+            this.saveDictionaryItem();
+        });
+
+        // キャンセルボタン
+        document.getElementById('mock-cancel-dictionary-btn').addEventListener('click', () => {
+            this.hideDictionaryForm();
+        });
+
+        // 大項目変更
+        document.getElementById('mock-dict-category1').addEventListener('change', () => {
+            this.updateDictionaryCategory2();
+        });
+
+        // コントロールボタン
+        document.getElementById('dictionary-next-btn').addEventListener('click', () => {
+            this.nextDictionaryStep();
+        });
+        document.getElementById('dictionary-prev-btn').addEventListener('click', () => {
+            this.prevDictionaryStep();
+        });
+        document.getElementById('dictionary-reset-btn').addEventListener('click', () => {
+            this.resetDictionaryTutorial();
+        });
+
+        this.renderDictionaryList();
+        this.updateDictionaryStep();
+    }
+
+    /**
+     * 辞書フォームの表示
+     */
+    showDictionaryForm() {
+        document.getElementById('mock-dictionary-form').style.display = 'block';
+        
+        const state = this.tutorialStates.dictionary;
+        if (state.currentStep === 0) {
+            state.currentStep = 1;
+            this.updateDictionaryStep();
+        }
+    }
+
+    /**
+     * 辞書フォームの非表示
+     */
+    hideDictionaryForm() {
+        document.getElementById('mock-dictionary-form').style.display = 'none';
+        
+        // フォームをリセット
+        document.getElementById('mock-dict-category1').value = '';
+        document.getElementById('mock-dict-category2').value = '';
+        document.getElementById('mock-dict-prompt').value = '';
+    }
+
+    /**
+     * 中項目の更新
+     */
+    updateDictionaryCategory2() {
+        const category1 = document.getElementById('mock-dict-category1').value;
+        const category2Select = document.getElementById('mock-dict-category2');
+        
+        category2Select.innerHTML = '<option value="">中項目を選択してください</option>';
+        
+        if (category1 === 'キャラクター') {
+            category2Select.innerHTML += '<option value="女性">女性</option><option value="男性">男性</option>';
+        } else if (category1 === 'ポーズ') {
+            category2Select.innerHTML += '<option value="立ち">立ち</option><option value="座り">座り</option>';
+        } else if (category1 === '背景') {
+            category2Select.innerHTML += '<option value="屋内">屋内</option><option value="屋外">屋外</option>';
+        }
+
+        const state = this.tutorialStates.dictionary;
+        if (state.currentStep === 1) {
+            state.currentStep = 2;
+            this.updateDictionaryStep();
+        }
+    }
+
+    /**
+     * 辞書項目の保存
+     */
+    saveDictionaryItem() {
+        const category1 = document.getElementById('mock-dict-category1').value;
+        const category2 = document.getElementById('mock-dict-category2').value;
+        const prompt = document.getElementById('mock-dict-prompt').value;
+
+        if (category1 && category2 && prompt) {
+            const newItem = {
+                category: `${category1}(${category2})`,
+                prompt: prompt
+            };
+
+            this.dummyData.dictionaryData.unshift(newItem);
+            this.renderDictionaryList();
+            this.hideDictionaryForm();
+
+            const state = this.tutorialStates.dictionary;
+            state.newItem = newItem;
+            
+            if (state.currentStep === 3) {
+                state.currentStep = 4;
+                this.updateDictionaryStep();
+            }
+        }
+    }
+
+    /**
+     * 辞書リストの描画
+     */
+    renderDictionaryList() {
+        const container = document.getElementById('mock-dictionary-list');
+        container.innerHTML = '';
+
+        this.dummyData.dictionaryData.forEach((item, index) => {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'dictionary-item';
+            itemElement.innerHTML = `
+                <div class="item-category">${item.category}</div>
+                <div class="item-prompt">${item.prompt}</div>
+                <div class="item-actions">
+                    <button class="use-btn">使用</button>
+                    <button class="edit-btn">編集</button>
+                </div>
+            `;
+
+            // 使用ボタンのイベント
+            itemElement.querySelector('.use-btn').addEventListener('click', () => {
+                this.useDictionaryItem(item);
+            });
+
+            container.appendChild(itemElement);
+        });
+    }
+
+    /**
+     * 辞書項目の使用
+     */
+    useDictionaryItem(item) {
+        // 検索タブに切り替えて追加（デモ用）
+        const searchState = this.tutorialStates.search;
+        searchState.currentPrompts.push(item.prompt);
+        
+        // 現在のプロンプト表示を更新
+        const display = document.getElementById('current-prompt-display');
+        display.textContent = searchState.currentPrompts.join(', ');
+        
+        console.log(`📚 辞書項目を使用: ${item.prompt}`);
+    }
+
+    /**
+     * 辞書ステップの更新
+     */
+    updateDictionaryStep() {
+        const state = this.tutorialStates.dictionary;
+        const messages = [
+            'オリジナルプロンプトを辞書に登録して管理しましょう！',
+            '新規追加ボタンをクリックしてフォームを表示しましょう。',
+            '大項目で「キャラクター」を選択して、中項目を表示させましょう。',
+            'プロンプトに「ツインテール美少女」と入力して保存しましょう。',
+            '素晴らしい！辞書に登録されました。「使用」ボタンで呼び出せます。'
+        ];
+
+        document.getElementById('dictionary-guide-message').textContent = messages[state.currentStep];
+        document.getElementById('dictionary-progress-text').textContent = `ステップ ${state.currentStep + 1}/${state.maxSteps}`;
+        document.getElementById('dictionary-progress').style.width = `${((state.currentStep + 1) / state.maxSteps) * 100}%`;
+
+        document.getElementById('dictionary-prev-btn').disabled = state.currentStep === 0;
+        document.getElementById('dictionary-next-btn').disabled = state.currentStep >= state.maxSteps - 1;
+    }
+
+    /**
+     * 辞書ステップを次へ
+     */
+    nextDictionaryStep() {
+        const state = this.tutorialStates.dictionary;
+        if (state.currentStep < state.maxSteps - 1) {
+            state.currentStep++;
+            this.updateDictionaryStep();
+            
+            // 自動実行処理
+            if (state.currentStep === 1) {
+                this.showDictionaryForm();
+            } else if (state.currentStep === 2) {
+                document.getElementById('mock-dict-category1').value = 'キャラクター';
+                this.updateDictionaryCategory2();
+            } else if (state.currentStep === 3) {
+                document.getElementById('mock-dict-category2').value = '女性';
+                document.getElementById('mock-dict-prompt').value = 'ツインテール美少女';
+            }
+        }
+    }
+
+    /**
+     * 辞書ステップを前へ
+     */
+    prevDictionaryStep() {
+        const state = this.tutorialStates.dictionary;
+        if (state.currentStep > 0) {
+            state.currentStep--;
+            this.updateDictionaryStep();
+        }
+    }
+
+    /**
+     * 辞書チュートリアルをリセット
+     */
+    resetDictionaryTutorial() {
+        const state = this.tutorialStates.dictionary;
+        state.currentStep = 0;
+        state.newItem = null;
+        
+        this.hideDictionaryForm();
+        this.updateDictionaryStep();
+    }
+
+    /**
+     * スロットタブチュートリアルの設定
+     */
+    setupSlotTutorial() {
+        // スロットに保存ボタン
+        document.querySelectorAll('.save-to-slot-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const slotItem = e.target.closest('.slot-item');
+                const slotNumber = slotItem.getAttribute('data-slot');
+                this.saveToSlot(slotNumber);
+            });
+        });
+
+        // コントロールボタン
+        document.getElementById('slot-next-btn').addEventListener('click', () => {
+            this.nextSlotStep();
+        });
+        document.getElementById('slot-prev-btn').addEventListener('click', () => {
+            this.prevSlotStep();
+        });
+        document.getElementById('slot-reset-btn').addEventListener('click', () => {
+            this.resetSlotTutorial();
+        });
+
+        this.updateSlotStep();
+    }
+
+    /**
+     * スロットに保存
+     */
+    saveToSlot(slotNumber) {
+        const state = this.tutorialStates.slot;
+        const prompt = document.getElementById('slot-prompt-preview').textContent;
+        
+        // スロットにデータを保存
+        state.savedSlots[slotNumber] = prompt;
+        
+        // UIを更新
+        const slotItem = document.querySelector(`[data-slot="${slotNumber}"]`);
+        slotItem.classList.remove('empty');
+        slotItem.classList.add('filled');
+        slotItem.querySelector('.slot-content').textContent = prompt.substring(0, 30) + '...';
+        
+        // ボタンを更新
+        const actions = slotItem.querySelector('.slot-actions');
+        actions.innerHTML = `
+            <button class="load-slot-btn">読み込み</button>
+            <button class="extract-slot-btn">抽出</button>
+        `;
+        
+        // 新しいボタンにイベントを追加
+        actions.querySelector('.load-slot-btn').addEventListener('click', () => {
+            this.loadFromSlot(slotNumber);
+        });
+        actions.querySelector('.extract-slot-btn').addEventListener('click', () => {
+            this.showExtractionMode(slotNumber);
+        });
+
+        // ステップ進行
+        if (state.currentStep === 0) {
+            state.currentStep = 1;
+            this.updateSlotStep();
+        }
+    }
+
+    /**
+     * スロットから読み込み
+     */
+    loadFromSlot(slotNumber) {
+        const state = this.tutorialStates.slot;
+        const prompt = state.savedSlots[slotNumber];
+        
+        if (prompt) {
+            document.getElementById('slot-prompt-preview').textContent = prompt;
+            console.log(`💾 スロット${slotNumber}から読み込み: ${prompt}`);
+        }
+    }
+
+    /**
+     * 抽出モードの表示
+     */
+    showExtractionMode(slotNumber) {
+        const state = this.tutorialStates.slot;
+        const prompt = state.savedSlots[slotNumber];
+        
+        if (!prompt) return;
+
+        // プロンプトを要素に分解
+        const elements = prompt.split(', ').map(element => {
+            // 重み情報を除去
+            return element.replace(/\([^)]*:\d+\.?\d*\)/g, '').replace(/[()]/g, '');
+        });
+
+        // 抽出モードを表示
+        const extractionMode = document.getElementById('mock-extraction-mode');
+        const checkboxContainer = document.getElementById('extraction-checkboxes');
+        
+        checkboxContainer.innerHTML = '';
+        elements.forEach((element, index) => {
+            const checkboxDiv = document.createElement('div');
+            checkboxDiv.className = 'extraction-checkbox';
+            checkboxDiv.innerHTML = `
+                <input type="checkbox" id="extract-${index}" value="${element}" ${index % 2 === 0 ? 'checked' : ''}>
+                <label for="extract-${index}">${element}</label>
+            `;
+            checkboxContainer.appendChild(checkboxDiv);
+        });
+
+        extractionMode.style.display = 'block';
+
+        // 抽出実行ボタン
+        document.getElementById('extract-selected-btn').onclick = () => {
+            this.extractSelectedElements();
+        };
+
+        // キャンセルボタン
+        document.getElementById('cancel-extraction-btn').onclick = () => {
+            extractionMode.style.display = 'none';
+        };
+
+        // ステップ進行
+        if (state.currentStep === 1) {
+            state.currentStep = 2;
+            this.updateSlotStep();
+        }
+    }
+
+    /**
+     * 選択した要素を抽出
+     */
+    extractSelectedElements() {
+        const checkboxes = document.querySelectorAll('#extraction-checkboxes input[type="checkbox"]:checked');
+        const selectedElements = Array.from(checkboxes).map(cb => cb.value);
+        
+        if (selectedElements.length > 0) {
+            const extractedPrompt = selectedElements.join(', ');
+            document.getElementById('slot-prompt-preview').textContent = extractedPrompt;
+            document.getElementById('mock-extraction-mode').style.display = 'none';
+            
+            console.log(`🎯 要素抽出完了: ${extractedPrompt}`);
+            
+            // ステップ進行
+            const state = this.tutorialStates.slot;
+            if (state.currentStep === 2) {
+                state.currentStep = 3;
+                this.updateSlotStep();
+            }
+        }
+    }
+
+    /**
+     * スロットステップの更新
+     */
+    updateSlotStep() {
+        const state = this.tutorialStates.slot;
+        const messages = [
+            '完成したプロンプトをスロットに保存して管理しましょう！',
+            'スロット1の「保存」ボタンをクリックしてプロンプトを保存しましょう。',
+            '保存されました！今度は「抽出」ボタンをクリックして部分的に要素を取り出してみましょう。',
+            '抽出モードが表示されました！必要な要素だけを選択して「抽出」ボタンをクリックしましょう。',
+            '素晴らしい！選択した要素だけが抽出されました。複数のスロットから組み合わせることも可能です。'
+        ];
+
+        document.getElementById('slot-guide-message').textContent = messages[state.currentStep];
+        document.getElementById('slot-progress-text').textContent = `ステップ ${state.currentStep + 1}/${state.maxSteps}`;
+        document.getElementById('slot-progress').style.width = `${((state.currentStep + 1) / state.maxSteps) * 100}%`;
+
+        document.getElementById('slot-prev-btn').disabled = state.currentStep === 0;
+        document.getElementById('slot-next-btn').disabled = state.currentStep >= state.maxSteps - 1;
+    }
+
+    /**
+     * スロットステップを次へ
+     */
+    nextSlotStep() {
+        const state = this.tutorialStates.slot;
+        if (state.currentStep < state.maxSteps - 1) {
+            state.currentStep++;
+            this.updateSlotStep();
+            
+            // 自動実行処理
+            if (state.currentStep === 1) {
+                this.saveToSlot('1');
+            } else if (state.currentStep === 2) {
+                this.showExtractionMode('1');
+            }
+        }
+    }
+
+    /**
+     * スロットステップを前へ
+     */
+    prevSlotStep() {
+        const state = this.tutorialStates.slot;
+        if (state.currentStep > 0) {
+            state.currentStep--;
+            this.updateSlotStep();
+        }
+    }
+
+    /**
+     * スロットチュートリアルをリセット
+     */
+    resetSlotTutorial() {
+        const state = this.tutorialStates.slot;
+        state.currentStep = 0;
+        state.savedSlots = {};
+        
+        // スロットUIをリセット
+        document.querySelectorAll('.slot-item').forEach(slot => {
+            slot.classList.remove('filled');
+            slot.classList.add('empty');
+            slot.querySelector('.slot-content').textContent = '空';
+            slot.querySelector('.slot-actions').innerHTML = '<button class="save-to-slot-btn">保存</button>';
+        });
+        
+        document.getElementById('mock-extraction-mode').style.display = 'none';
+        this.updateSlotStep();
+    }
+
+    /**
+     * ヘッダータブチュートリアルの設定
+     */
+    setupHeaderTutorial() {
+        // 履歴ボタン
+        document.getElementById('mock-history-btn').addEventListener('click', () => {
+            this.showHistoryModal();
+        });
+
+        // モーダル閉じるボタン
+        document.getElementById('close-history-modal').addEventListener('click', () => {
+            this.hideHistoryModal();
+        });
+
+        // 履歴復元ボタン
+        document.querySelectorAll('.restore-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const historyItem = e.target.closest('.history-item');
+                const historyIndex = historyItem.getAttribute('data-history');
+                this.restoreFromHistory(historyIndex);
+            });
+        });
+
+        // コピーボタン
+        document.getElementById('mock-copy-header-btn').addEventListener('click', () => {
+            this.copyHeaderPrompt();
+        });
+
+        // クリアボタン
+        document.getElementById('mock-clear-btn').addEventListener('click', () => {
+            this.clearHeaderPrompt();
+        });
+
+        // コントロールボタン
+        document.getElementById('header-next-btn').addEventListener('click', () => {
+            this.nextHeaderStep();
+        });
+        document.getElementById('header-prev-btn').addEventListener('click', () => {
+            this.prevHeaderStep();
+        });
+        document.getElementById('header-reset-btn').addEventListener('click', () => {
+            this.resetHeaderTutorial();
+        });
+
+        this.updateHeaderStep();
+    }
+
+    /**
+     * 履歴モーダルの表示
+     */
+    showHistoryModal() {
+        document.getElementById('mock-history-modal').style.display = 'flex';
+        
+        const state = this.tutorialStates.header;
+        state.historyVisible = true;
+        
+        if (state.currentStep === 0) {
+            state.currentStep = 1;
+            this.updateHeaderStep();
+        }
+    }
+
+    /**
+     * 履歴モーダルの非表示
+     */
+    hideHistoryModal() {
+        document.getElementById('mock-history-modal').style.display = 'none';
+        
+        const state = this.tutorialStates.header;
+        state.historyVisible = false;
+    }
+
+    /**
+     * 履歴から復元
+     */
+    restoreFromHistory(historyIndex) {
+        const historyItem = this.dummyData.generateHistory[historyIndex];
+        if (historyItem) {
+            // 検索タブのプロンプト表示を更新（デモ用）
+            document.getElementById('current-prompt-display').textContent = historyItem.prompt;
+            
+            this.hideHistoryModal();
+            
+            console.log(`📋 履歴から復元: ${historyItem.prompt}`);
+            
+            // ステップ進行
+            const state = this.tutorialStates.header;
+            if (state.currentStep === 1) {
+                state.currentStep = 2;
+                this.updateHeaderStep();
+            }
+        }
+    }
+
+    /**
+     * ヘッダープロンプトのコピー
+     */
+    copyHeaderPrompt() {
+        const prompt = document.getElementById('current-prompt-display').textContent;
+        console.log(`📋 ヘッダーからコピー: ${prompt}`);
+        
+        // コピー成功のフィードバック
+        const btn = document.getElementById('mock-copy-header-btn');
+        const originalText = btn.textContent;
+        btn.textContent = '✅ コピー済み';
+        setTimeout(() => {
+            btn.textContent = originalText;
+        }, 2000);
+    }
+
+    /**
+     * ヘッダープロンプトのクリア
+     */
+    clearHeaderPrompt() {
+        document.getElementById('current-prompt-display').textContent = 'プロンプトを追加してください';
+        console.log('🗑️ プロンプトをクリア');
+    }
+
+    /**
+     * ヘッダーステップの更新
+     */
+    updateHeaderStep() {
+        const state = this.tutorialStates.header;
+        const messages = [
+            'ヘッダーの便利な機能を使ってみましょう！',
+            '履歴ボタンをクリックして過去のGenerate履歴を確認しましょう。',
+            '履歴が表示されました！お好みの項目をクリックして復元してみましょう。',
+            '素晴らしい！履歴から復元されました。コピー・クリア機能も活用できます。'
+        ];
+
+        document.getElementById('header-guide-message').textContent = messages[state.currentStep];
+        document.getElementById('header-progress-text').textContent = `ステップ ${state.currentStep + 1}/${state.maxSteps}`;
+        document.getElementById('header-progress').style.width = `${((state.currentStep + 1) / state.maxSteps) * 100}%`;
+
+        document.getElementById('header-prev-btn').disabled = state.currentStep === 0;
+        document.getElementById('header-next-btn').disabled = state.currentStep >= state.maxSteps - 1;
+    }
+
+    /**
+     * ヘッダーステップを次へ
+     */
+    nextHeaderStep() {
+        const state = this.tutorialStates.header;
+        if (state.currentStep < state.maxSteps - 1) {
+            state.currentStep++;
+            this.updateHeaderStep();
+            
+            // 自動実行処理
+            if (state.currentStep === 1) {
+                this.showHistoryModal();
+            }
+        }
+    }
+
+    /**
+     * ヘッダーステップを前へ
+     */
+    prevHeaderStep() {
+        const state = this.tutorialStates.header;
+        if (state.currentStep > 0) {
+            state.currentStep--;
+            this.updateHeaderStep();
+        }
+    }
+
+    /**
+     * ヘッダーチュートリアルをリセット
+     */
+    resetHeaderTutorial() {
+        const state = this.tutorialStates.header;
+        state.currentStep = 0;
+        state.historyVisible = false;
+        
+        this.hideHistoryModal();
+        this.updateHeaderStep();
+    }
+
+    /**
+     * 現在のチュートリアルをリセット
+     */
+    resetCurrentTutorial() {
+        switch (this.currentTab) {
+            case 'search':
+                this.resetSearchTutorial();
+                break;
+            case 'edit':
+                this.resetEditTutorial();
+                break;
+            case 'dictionary':
+                this.resetDictionaryTutorial();
+                break;
+            case 'slot':
+                this.resetSlotTutorial();
+                break;
+            case 'header':
+                this.resetHeaderTutorial();
+                break;
+        }
+    }
+
+    /**
+     * 現在のプロンプトをコピー
+     */
+    copyCurrentPrompt() {
+        const prompt = document.getElementById('current-prompt-display').textContent;
+        console.log(`📋 現在のプロンプトをコピー: ${prompt}`);
+        
+        // コピー成功のフィードバック
+        const btn = document.getElementById('mock-copy-btn');
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.classList.remove('copied');
+        }, 600);
+    }
+
+    /**
+     * 最終プロンプトをコピー
+     */
+    copyFinalPrompt() {
+        const prompt = document.getElementById('final-prompt-display').textContent;
+        console.log(`📋 最終プロンプトをコピー: ${prompt}`);
+        
+        // コピー成功のフィードバック
+        const btn = document.getElementById('edit-copy-btn');
+        btn.classList.add('copied');
+        setTimeout(() => {
+            btn.classList.remove('copied');
+        }, 600);
+    }
+}
+
+// ページ読み込み時に初期化
+const distributionPageManager = new DistributionPageManager();
+const interactiveTutorialManager = new InteractiveTutorialManager();
+
+// デバッグ用（開発時のみ）
+if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    window.distributionPageManager = distributionPageManager;
+    window.interactiveTutorialManager = interactiveTutorialManager;
+    console.log('🔧 開発モード: 管理オブジェクトがwindowに登録されました');
+}
