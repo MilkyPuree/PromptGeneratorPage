@@ -1,1 +1,491 @@
-dummy
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptGenerator - Chrome拡張機能配布ページ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>🎨 PromptGenerator</h1>
+                    <p class="version">Chrome Extension v1.0.0</p>
+                </div>
+                <div class="header-buttons">
+                    <a href="#download" class="btn btn-primary">📥 ダウンロード</a>
+                    <a href="tutorial/index.html" class="btn btn-secondary">📖 使い方ガイド</a>
+                    <a href="#guide" class="btn btn-secondary">📖 使い方</a>
+                </div>
+            </div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="main-content">
+            <!-- 紹介セクション -->
+            <section class="intro">
+                <div class="intro-content">
+                    <h2>AI画像生成プロンプト管理の決定版</h2>
+                    <p class="intro-description">
+                        PromptGeneratorは、AI画像生成のプロンプト作成・管理・翻訳を効率化するChrome拡張機能です。
+                        豊富なマスターデータベースと直感的なUIで、クリエイティブな作業をサポートします。
+                    </p>
+                    <div class="features">
+                        <div class="feature-item">
+                            <span class="feature-icon">🔍</span>
+                            <div class="feature-text">
+                                <h3>高速検索</h3>
+                                <p>豊富なプロンプトデータベースから瞬時に検索</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">✏️</span>
+                            <div class="feature-text">
+                                <h3>直感的編集</h3>
+                                <p>ドラッグ&ドロップでプロンプトを自由に編集</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">🌐</span>
+                            <div class="feature-text">
+                                <h3>自動翻訳</h3>
+                                <p>日本語⇔英語の双方向翻訳に対応</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <span class="feature-icon">💾</span>
+                            <div class="feature-text">
+                                <h3>スロット管理</h3>
+                                <p>よく使うプロンプトをスロットで管理</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ダウンロードセクション -->
+            <section id="download" class="download">
+                <div class="section-content">
+                    <h2>📥 ダウンロード</h2>
+                    <div class="download-area">
+                        <div class="download-info">
+                            <h3>最新版ダウンロード</h3>
+                            <p>以下のボタンから最新版をダウンロードできます。定期的に更新されますので、最新版をご利用ください。</p>
+                        </div>
+                        <div class="download-buttons" id="downloadButtons">
+                            <!-- 動的に生成されるダウンロードリンク -->
+                            <p class="loading">📦 配布ファイルを準備中...</p>
+                            <p class="help-text">
+                                配布ファイルがない場合は、<code>create_distribution.bat</code> を実行して生成してください。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- インストールガイド -->
+            <section id="guide" class="guide">
+                <div class="section-content">
+                    <h2>📖 インストール・使い方ガイド</h2>
+                    
+                    <!-- インストール・更新手順 -->
+                    <div class="guide-section">
+                        <h3>🔧 インストール・更新手順</h3>
+                        
+                        <!-- タブ切り替えボタン -->
+                        <div class="setup-tabs">
+                            <button class="setup-tab-btn active" data-tab="install">
+                                <span class="tab-icon">📥</span>
+                                <span class="tab-text">初回インストール</span>
+                            </button>
+                            <button class="setup-tab-btn" data-tab="update">
+                                <span class="tab-icon">🔄</span>
+                                <span class="tab-text">アップデート</span>
+                            </button>
+                        </div>
+                        
+                        <!-- インストールタブコンテンツ -->
+                        <div class="setup-tab-content active" id="install-content">
+                            <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>拡張機能をダウンロード</h4>
+                                    <p>上記のダウンロードボタンからzipファイルをダウンロードし、適当な場所に展開してください。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Chrome拡張機能管理画面を開く</h4>
+                                    <p>Chromeのアドレスバーに <code>chrome://extensions/</code> と入力するか、右上のメニューから「その他のツール」→「拡張機能」を選択します。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>デベロッパーモードを有効化</h4>
+                                    <p>拡張機能管理画面の右上にある「デベロッパーモード」のスイッチをオンにしてください。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>拡張機能を読み込み</h4>
+                                    <p>「パッケージ化されていない拡張機能を読み込む」ボタンをクリックし、展開したフォルダを選択してください。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h4>インストール完了！</h4>
+                                    <p>ブラウザのツールバーにPromptGeneratorのアイコンが表示されます。クリックして使い始めましょう！</p>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        
+                        <!-- 更新タブコンテンツ -->
+                        <div class="setup-tab-content" id="update-content">
+                            <div class="steps">
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>新しいバージョンをダウンロード</h4>
+                                    <p>上記のダウンロードボタンから最新版のzipファイルをダウンロードし、適当な場所に展開してください。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>既存ファイルをバックアップ（推奨）</h4>
+                                    <p>既存の拡張機能フォルダを別の場所にコピーしてバックアップを作成することをお勧めします。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>ファイルを置き換え</h4>
+                                    <p>新しく展開したファイルを、既存の拡張機能フォルダに上書きコピーしてください。すべてのファイルを置き換えます。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>拡張機能を再読み込み</h4>
+                                    <p>Chrome拡張機能管理画面（<code>chrome://extensions/</code>）でPromptGeneratorの「🔄」ボタンをクリックして更新してください。</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h4>更新完了！</h4>
+                                    <p>拡張機能が最新版に更新されました。データや設定は引き継がれます。</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 更新に関する注意事項 -->
+                        <div class="update-notes" style="margin-top: 2rem; padding: 1.5rem; background: linear-gradient(135deg, var(--bg-card), var(--bg-tertiary)); border-radius: var(--border-radius-lg); border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--primary-color); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                                <span>💡</span> 更新時の重要なポイント
+                            </h4>
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                <li style="padding: 0.5rem 0; color: var(--text-secondary); position: relative; padding-left: 1.5rem;">
+                                    <span style="position: absolute; left: 0; color: var(--success-color);">✓</span>
+                                    既存のデータ（プロンプト、辞書、スロット）は自動的に引き継がれます
+                                </li>
+                                <li style="padding: 0.5rem 0; color: var(--text-secondary); position: relative; padding-left: 1.5rem;">
+                                    <span style="position: absolute; left: 0; color: var(--success-color);">✓</span>
+                                    設定やテーマ選択も保持されます
+                                </li>
+                                <li style="padding: 0.5rem 0; color: var(--text-secondary); position: relative; padding-left: 1.5rem;">
+                                    <span style="position: absolute; left: 0; color: var(--warning-color);">⚠</span>
+                                    更新前のバックアップ作成を強く推奨します
+                                </li>
+                                <li style="padding: 0.5rem 0; color: var(--text-secondary); position: relative; padding-left: 1.5rem;">
+                                    <span style="position: absolute; left: 0; color: var(--primary-color);">ℹ</span>
+                                    Chromeブラウザの再起動は不要です
+                                </li>
+                            </ul>
+                        </div>
+                        </div>
+                    </div>
+
+                    <!-- プライバシー情報 -->
+                    <div class="guide-section">
+                        <h3>📌 プライバシーについて</h3>
+                        <div class="privacy-content-inline">
+                            <div class="privacy-intro-small">
+                                <p>
+                                    PromptGeneratorは、ユーザーのプライバシーを尊重し、必要最小限の情報のみを収集します。
+                                    検索機能で入力されたキーワードは、今後の辞書更新の参考とするため、検索ワードと追加要素を収集する場合があります。
+                                </p>
+                            </div>
+                            
+                            <div class="privacy-grid-inline">
+                                <div class="privacy-item-inline collect">
+                                    <div class="privacy-header-inline">
+                                        <span class="privacy-icon-inline">📊</span>
+                                        <h4>収集する情報</h4>
+                                    </div>
+                                    <ul>
+                                        <li>検索ワード</li>
+                                        <li>追加要素</li>
+                                    </ul>
+                                    <p class="privacy-note-inline">
+                                        辞書機能の改善とマスターデータの拡充のためにのみ使用されます。
+                                    </p>
+                                </div>
+
+                                <div class="privacy-item-inline not-collect">
+                                    <div class="privacy-header-inline">
+                                        <span class="privacy-icon-inline">🔒</span>
+                                        <h4>収集しない情報</h4>
+                                    </div>
+                                    <ul>
+                                        <li>個人情報（名前、メールアドレス等）</li>
+                                        <li>生成したプロンプト</li>
+                                        <li>保存されたスロットデータ</li>
+                                        <li>辞書に登録した個人データ</li>
+                                        <li>その他のユーザーデータ</li>
+                                    </ul>
+                                    <p class="privacy-note-inline">
+                                        プライベートなデータは一切収集されません。すべてローカルに保存されます。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="privacy-summary">
+                                <p>
+                                    <strong>📍 重要</strong>: 収集されるデータは辞書機能の改善のためにのみ使用され、第三者に提供されることはありません。
+                                    すべてのプライベートなデータはお使いのブラウザのローカルストレージに安全に保存されます。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 基本的な使い方 -->
+                    <div class="guide-section">
+                        <h3>🎯 基本的な使い方</h3>
+                        <div class="usage-grid">
+                            <div class="usage-item">
+                                <h4>🔍 検索タブ</h4>
+                                <ul>
+                                    <li>豊富なマスターデータから簡単検索</li>
+                                    <li>カテゴリー絞り込み機能</li>
+                                    <li>検索結果をワンクリックで追加</li>
+                                </ul>
+                            </div>
+                            <div class="usage-item">
+                                <h4>✏️ 編集タブ</h4>
+                                <ul>
+                                    <li>ドラッグ&ドロップで並び替え</li>
+                                    <li>重み値の調整機能</li>
+                                    <li>自動翻訳（日本語⇔英語）</li>
+                                </ul>
+                            </div>
+                            <div class="usage-item">
+                                <h4>📚 辞書タブ</h4>
+                                <ul>
+                                    <li>よく使うプロンプトを辞書登録</li>
+                                    <li>カテゴリー別管理</li>
+                                    <li>CSV形式でインポート・エクスポート</li>
+                                </ul>
+                            </div>
+                            <div class="usage-item">
+                                <h4>💾 スロットタブ</h4>
+                                <ul>
+                                    <li>完成したプロンプトをスロット保存</li>
+                                    <li>グループ管理機能</li>
+                                    <li>ワンクリックで呼び出し</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ショートカットキー -->
+                    <div class="guide-section">
+                        <h3>⌨️ ショートカットキー</h3>
+                        <div class="shortcuts">
+                            <div class="shortcut-item">
+                                <code>Alt + G</code>
+                                <span>拡張機能パネルを開く</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <code>Ctrl + Shift + S</code>
+                                <span>選択テキストを辞書に保存</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <code>Ctrl + Enter</code>
+                                <span>翻訳実行</span>
+                            </div>
+                            <div class="shortcut-item">
+                                <code>Ctrl + D</code>
+                                <span>編集モードでアイテム削除</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- チュートリアル案内セクション -->
+            <section class="tutorial-guide">
+                <div class="section-content">
+                    <h2>📖 詳細な使い方ガイド</h2>
+                    <div class="tutorial-guide-content">
+                        <div class="tutorial-description">
+                            <p>
+                                各機能の詳細な使い方を、実践的な例と共に分かりやすく解説しています。<br>
+                                初心者から上級者まで、レベルに応じて学習できる充実したガイドです！
+                            </p>
+                            <ul class="tutorial-features">
+                                <li>🔍 <strong>検索タブ</strong> - キーワード・カテゴリ検索のマスター</li>
+                                <li>✏️ <strong>編集タブ</strong> - プロンプト編集・並び替え・翻訳の活用</li>
+                                <li>💾 <strong>スロットタブ</strong> - プロンプト保存・グループ管理の応用</li>
+                                <li>📚 <strong>辞書タブ</strong> - オリジナル辞書作成・CSV活用の技術</li>
+                                <li>🎯 <strong>ヘッダー機能</strong> - Generate・履歴・設定・ショートカット</li>
+                            </ul>
+                        </div>
+                        <div class="tutorial-cta">
+                            <a href="tutorial/index.html" class="tutorial-button">
+                                <span class="tutorial-button-icon">📖</span>
+                                <span class="tutorial-button-text">
+                                    <strong>使い方ガイドを見る</strong>
+                                    <small>詳細な機能解説で完全マスター！</small>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+    
+            <!-- 高度な機能説明 -->
+            <section class="advanced-features">
+                <div class="section-content">
+                    <h2>🤖 高度な機能説明</h2>
+                    
+                    <div class="feature-section">
+                        <h3>⚡ 自動ジェネレート機能</h3>
+                        <p>PromptGeneratorには、繰り返し作業を効率化する自動ジェネレート機能が搭載されています。</p>
+                        
+                        <div class="feature-details">
+                            <h4>主な機能:</h4>
+                            <ul>
+                                <li><strong>バッチ生成</strong>: 複数のプロンプトパターンを一度に生成</li>
+                                <li><strong>テンプレート適用</strong>: 事前に作成したテンプレートを自動適用</li>
+                                <li><strong>ランダム要素</strong>: 指定したカテゴリからランダムに要素を選択</li>
+                                <li><strong>条件分岐</strong>: IF文のような条件に応じた要素の切り替え</li>
+                            </ul>
+                            
+                            <div class="code-example">
+                                <h4>使用例:</h4>
+                                <pre><code>テンプレート: "{{character}}, {{pose}}, {{background}}"
+↓ 自動生成
+1. "beautiful anime girl, standing pose, school classroom"
+2. "cute anime girl, sitting pose, outdoor park"  
+3. "cool anime girl, running pose, city street"</code></pre>
+                            </div>
+                            
+                            <div class="setup-steps">
+                                <h4>設定方法:</h4>
+                                <ol>
+                                    <li>「その他」タブ → 「自動ジェネレート設定」</li>
+                                    <li>テンプレートと変数を定義</li>
+                                    <li>生成数と条件を指定</li>
+                                    <li>「一括生成」実行で複数パターンを一度に作成</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-section">
+                        <h3>🎯 ビジュアルセレクタ更新機能</h3>
+                        <p>NovelAIなどのWebサービスでHTML要素が更新された場合でも、ビジュアルセレクタにより自動で対応できます。</p>
+                        
+                        <div class="feature-details">
+                            <h4>対応方法:</h4>
+                            <ul>
+                                <li><strong>要素検出</strong>: ページ上のプロンプト入力欄を自動検出</li>
+                                <li><strong>セレクタ更新</strong>: HTMLが変更されても新しいセレクタに自動適応</li>
+                                <li><strong>フォールバック</strong>: 複数の検出パターンで確実にターゲット発見</li>
+                                <li><strong>手動調整</strong>: 必要に応じてユーザーが手動でセレクタを指定可能</li>
+                            </ul>
+                            
+                            <div class="supported-sites">
+                                <h4>サポート対象:</h4>
+                                <div class="site-list">
+                                    <span class="site-item">✅ NovelAI (プロンプト入力欄)</span>
+                                    <span class="site-item">✅ Stable Diffusion WebUI (txt2img/img2img)</span>
+                                    <span class="site-item">✅ ChatGPT (カスタムGPTs)</span>
+                                    <span class="site-item">✅ その他のAI画像生成サービス</span>
+                                </div>
+                            </div>
+                            
+                            <div class="setup-steps">
+                                <h4>設定手順:</h4>
+                                <ol>
+                                    <li>「その他」タブ → 「サイト連携設定」</li>
+                                    <li>対象サイトでビジュアルセレクタを起動</li>
+                                    <li>プロンプト入力欄をクリックして要素を選択</li>
+                                    <li>設定を保存 → 以降は自動で入力欄を検出</li>
+                                </ol>
+                            </div>
+                            
+                            <div class="troubleshooting">
+                                <h4>トラブル時の対処:</h4>
+                                <ul>
+                                    <li>サイトのHTML構造が変更された場合</li>
+                                    <li>設定画面で「セレクタを再設定」をクリック</li>
+                                    <li>ビジュアルセレクタで新しい要素を指定</li>
+                                    <li>複数の候補が表示される場合は最適なものを選択</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- システム要件・注意事項 -->
+            <section class="requirements">
+                <div class="section-content">
+                    <h2>⚙️ システム要件・注意事項</h2>
+                    <div class="requirements-grid">
+                        <div class="requirement-item">
+                            <h3>動作環境</h3>
+                            <ul>
+                                <li>Google Chrome 88以降</li>
+                                <li>Microsoft Edge (Chromium版) 88以降</li>
+                                <li>Windows 10/11, macOS 10.15以降</li>
+                            </ul>
+                        </div>
+                        <div class="requirement-item">
+                            <h3>注意事項</h3>
+                            <ul>
+                                <li>翻訳機能はインターネット接続が必要です</li>
+                                <li>データはブラウザのローカルストレージに保存されます</li>
+                                <li>定期的なバックアップを推奨します</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- フッター -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>&copy; 2024 PromptGenerator. All rights reserved.</p>
+                <p>最終更新: <span id="lastUpdated">-</span></p>
+            </div>
+        </footer>
+    </div>
+
+    <script src="available-files.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

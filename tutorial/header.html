@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ヘッダー機能の使い方 - PromptGenerator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/hirsaeki/PromptGenerator-for-NovelAI/main/PromptGeneratorPlus/assets/icon/Icon128.png">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="nav-left">
+                    <h1>🎯 ヘッダー機能の使い方</h1>
+                </div>
+                <div class="nav-right">
+                    <a href="index.html" class="nav-link">← ガイド目次に戻る</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="tutorial-wrapper">
+            <!-- 概要 -->
+            <section class="content-section">
+                <h2>🎯 ヘッダー機能とは</h2>
+                <p>
+                    ヘッダー機能は、PromptGeneratorの最上部に配置された、
+                    <strong>プロンプト生成・管理・設定</strong>に関する中心的な操作を行う機能群です。
+                </p>
+                <p>
+                    <strong>主要機能</strong>：
+                </p>
+                <ul>
+                    <li><strong>Generate機能</strong> - 完成したプロンプトを生成・コピー</li>
+                    <li><strong>履歴管理</strong> - Generate結果の履歴表示・復元</li>
+                    <li><strong>設定機能</strong> - 拡張機能の各種設定・カスタマイズ</li>
+                    <li><strong>プロンプト記法切り替え</strong> - SD記法、NAI記法、自動整形無しの選択</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 ヘッダー機能の位置づけ</strong><br>
+                    各タブ（検索・編集・辞書・スロット）で素材準備や調整を行った後、
+                    ヘッダー機能で最終的なプロンプト生成と出力を行います。全機能の「出口」となる重要な部分です。
+                </div>
+            </section>
+
+            <!-- Generate機能 -->
+            <section class="content-section">
+                <h2>🚀 Generate機能の使い方</h2>
+
+                <h3>Generate機能とは</h3>
+                <p>
+                    編集タブで組み立てたプロンプト要素を、選択した記法に従って
+                    <strong>最終的な文字列</strong>に変換し、クリップボードにコピーする機能です。
+                </p>
+
+                <h3>🎯 Generateの基本操作</h3>
+                <ol>
+                    <li><strong>編集タブでプロンプトを完成</strong></li>
+                    <li><strong>記法を選択</strong>（SD記法・NAI記法・自動整形無し）</li>
+                    <li><strong>「Generate」ボタンをクリック</strong></li>
+                    <li><strong>生成されたプロンプトが表示される</strong></li>
+                    <li><strong>「Copy」ボタンでクリップボードにコピー</strong></li>
+                </ol>
+
+                <h3>📝 記法別の出力形式</h3>
+
+                <h4>🎨 SD記法（Stable Diffusion）</h4>
+                <p><strong>特徴</strong>：重み値を括弧で表現する形式</p>
+                <pre><code>入力: 美少女(1.3), ロングヘア(0.8), 学校制服(1.0)
+出力: (beautiful anime girl:1.3), (long hair:0.8), school uniform
+
+重み値表現:
+- 1.0以上: (prompt:1.3) 形式
+- 1.0未満: (prompt:0.8) 形式
+- ちょうど1.0: 括弧なし</code></pre>
+
+                <h4>🌟 NAI記法（NovelAI）</h4>
+                <p><strong>特徴</strong>：重み値を波括弧で表現する形式</p>
+                <pre><code>入力: 美少女(1.3), ロングヘア(0.8), 学校制服(1.0)
+出力: {beautiful anime girl}, [long hair], school uniform
+
+重み値表現:
+- 1.0以上: {prompt} 形式（強調）
+- 1.0未満: [prompt] 形式（弱化）
+- ちょうど1.0: 記号なし</code></pre>
+
+                <h4>📋 自動整形無し</h4>
+                <p><strong>特徴</strong>：プロンプトをそのまま出力</p>
+                <pre><code>入力: 美少女(1.3), ロングヘア(0.8), 学校制服(1.0)
+出力: 美少女, ロングヘア, 学校制服
+
+- 重み値は無視
+- カンマ区切りのシンプルな形式
+- 他のツールとの連携時に便利</code></pre>
+
+                <h3>⚡ 自動Generate機能</h3>
+                <p>
+                    <strong>「自動」ボタン</strong>をONにすると、編集タブでの変更が
+                    自動的にGenerateに反映されます。
+                </p>
+
+                <h4>自動Generateの活用場面</h4>
+                <ul>
+                    <li><strong>リアルタイムプレビュー</strong> - 編集しながら結果を即座に確認</li>
+                    <li><strong>微調整時</strong> - 重み値調整の効果を即座に確認</li>
+                    <li><strong>実験・テスト時</strong> - 様々な要素組み合わせを素早く試行</li>
+                </ul>
+
+                <h4>自動Generateを無効にする場面</h4>
+                <ul>
+                    <li><strong>大量編集時</strong> - パフォーマンス向上のため</li>
+                    <li><strong>集中作業時</strong> - 不要な更新処理を避けるため</li>
+                    <li><strong>未完成時</strong> - 完成してから一度だけ実行したい場合</li>
+                </ul>
+
+                <div class="tip-box success">
+                    <strong>✅ Generate機能の効率的な使い方</strong>
+                    <ul>
+                        <li>記法は使用するAI生成サービスに合わせて選択</li>
+                        <li>自動Generateは編集中はOFF、確認時のみONが効率的</li>
+                        <li>生成後は必ず内容を確認してからコピー</li>
+                        <li>長いプロンプトは文字数制限に注意</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 履歴管理機能 -->
+            <section class="content-section">
+                <h2>📝 履歴管理機能</h2>
+
+                <h3>履歴機能とは</h3>
+                <p>
+                    Generate実行時のプロンプトを自動的に記録し、
+                    過去の成功例を簡単に呼び出せる機能です。
+                </p>
+
+                <h3>📊 履歴の表示・管理</h3>
+                
+                <h4>履歴の確認方法</h4>
+                <ol>
+                    <li><strong>「📝」ボタンをクリック</strong></li>
+                    <li><strong>履歴一覧が表示される</strong></li>
+                    <li><strong>各履歴の詳細情報を確認</strong>
+                        <ul>
+                            <li>プロンプト内容（省略表示）</li>
+                            <li>生成日時</li>
+                            <li>使用した記法</li>
+                            <li>文字数・要素数</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h4>履歴からの復元</h4>
+                <ol>
+                    <li><strong>復元したい履歴を選択</strong></li>
+                    <li><strong>「復元」ボタンをクリック</strong></li>
+                    <li><strong>編集タブに自動的に内容が読み込まれる</strong></li>
+                    <li><strong>必要に応じて再編集・微調整</strong></li>
+                </ol>
+
+                <h3>🎯 履歴の活用シーン</h3>
+
+                <h4>1. 成功パターンの再利用</h4>
+                <ul>
+                    <li><strong>良い結果が出たプロンプトの再実行</strong></li>
+                    <li><strong>似たテーマでの微調整ベースとして活用</strong></li>
+                    <li><strong>クライアントの好みに合った過去例の参照</strong></li>
+                </ul>
+
+                <h4>2. 実験結果の比較</h4>
+                <ul>
+                    <li><strong>重み値を変えた複数パターンの比較</strong></li>
+                    <li><strong>要素追加・削除による変化の確認</strong></li>
+                    <li><strong>記法による出力差の比較</strong></li>
+                </ul>
+
+                <h4>3. 作業の効率化</h4>
+                <ul>
+                    <li><strong>中断した作業の続きから再開</strong></li>
+                    <li><strong>誤って削除してしまった内容の復旧</strong></li>
+                    <li><strong>過去の学習・研究結果の振り返り</strong></li>
+                </ul>
+
+                <h3>📈 履歴分析の活用</h3>
+
+                <h4>自分の傾向分析</h4>
+                <p>履歴を定期的に振り返ることで、以下の傾向が見えてきます：</p>
+                <ul>
+                    <li><strong>よく使う要素の組み合わせ</strong></li>
+                    <li><strong>効果的な重み値の範囲</strong></li>
+                    <li><strong>成功しやすいプロンプト構成</strong></li>
+                    <li><strong>避けるべき要素の組み合わせ</strong></li>
+                </ul>
+
+                <h4>品質向上への活用</h4>
+                <ul>
+                    <li><strong>成功例の共通点を抽出</strong></li>
+                    <li><strong>失敗パターンの特定・回避</strong></li>
+                    <li><strong>新しいアイデアの着想源</strong></li>
+                    <li><strong>スキルアップの記録として活用</strong></li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 履歴管理のコツ</strong><br>
+                    重要な履歴は、生成後すぐにスロットやお気に入り辞書にも保存しておくことで、
+                    より確実な保存と分類管理が可能になります。
+                </div>
+            </section>
+
+            <!-- 設定機能 -->
+            <section class="content-section">
+                <h2>⚙️ 設定機能</h2>
+
+                <h3>設定機能とは</h3>
+                <p>
+                    PromptGeneratorの動作をカスタマイズし、
+                    あなたの使用環境や好みに合わせて最適化する機能です。
+                </p>
+
+                <h3>🎨 外観・UI設定</h3>
+
+                <h4>テーマ設定</h4>
+                <ul>
+                    <li><strong>ダークテーマ</strong> - 目に優しい暗色基調（推奨）</li>
+                    <li><strong>ライトテーマ</strong> - 明色基調のクラシックスタイル</li>
+                    <li><strong>自動切り替え</strong> - システム設定に連動</li>
+                </ul>
+
+                <h4>フォント・表示設定</h4>
+                <ul>
+                    <li><strong>フォントサイズ</strong> - 小・中・大から選択</li>
+                    <li><strong>コンパクト表示</strong> - 情報密度の調整</li>
+                    <li><strong>アニメーション</strong> - 動的効果のON/OFF</li>
+                </ul>
+
+                <h3>🔧 機能設定</h3>
+
+                <h4>翻訳設定</h4>
+                <ul>
+                    <li><strong>翻訳エンジン選択</strong> - Google翻訳・DeepL・内蔵エンジン</li>
+                    <li><strong>翻訳品質</strong> - 速度重視・品質重視の選択</li>
+                    <li><strong>自動翻訳</strong> - 要素追加時の自動翻訳ON/OFF</li>
+                    <li><strong>翻訳履歴</strong> - 翻訳結果の学習・改善機能</li>
+                </ul>
+
+                <h4>検索設定</h4>
+                <ul>
+                    <li><strong>検索結果表示数</strong> - 1ページあたりの表示件数</li>
+                    <li><strong>検索精度</strong> - 厳密一致・部分一致・あいまい検索</li>
+                    <li><strong>検索履歴</strong> - 過去の検索キーワード保存</li>
+                    <li><strong>フィルタリング</strong> - 除外キーワード・カテゴリ設定</li>
+                </ul>
+
+                <h4>Generate設定</h4>
+                <ul>
+                    <li><strong>デフォルト記法</strong> - 起動時に選択される記法</li>
+                    <li><strong>自動コピー</strong> - Generate実行時の自動クリップボードコピー</li>
+                    <li><strong>履歴保存数</strong> - 保存する履歴の最大件数</li>
+                    <li><strong>出力形式</strong> - 改行・区切り文字のカスタマイズ</li>
+                </ul>
+
+                <h3>💾 データ設定</h3>
+
+                <h4>バックアップ・同期設定</h4>
+                <ul>
+                    <li><strong>自動バックアップ</strong> - 定期的なデータバックアップ</li>
+                    <li><strong>クラウド同期</strong> - Google Drive等との連携（計画中）</li>
+                    <li><strong>エクスポート形式</strong> - CSV・JSON・XMLの選択</li>
+                    <li><strong>データ暗号化</strong> - 機密データの保護設定</li>
+                </ul>
+
+                <h4>パフォーマンス設定</h4>
+                <ul>
+                    <li><strong>キャッシュサイズ</strong> - メモリ使用量の調整</li>
+                    <li><strong>非同期処理</strong> - バックグラウンド処理の最適化</li>
+                    <li><strong>レスポンス優先度</strong> - UI応答性vs処理速度のバランス</li>
+                    <li><strong>デバッグモード</strong> - 開発者向け詳細ログ表示</li>
+                </ul>
+
+                <h3>🌐 外部連携設定</h3>
+
+                <h4>AI生成サービス連携</h4>
+                <ul>
+                    <li><strong>NovelAI連携</strong> - 自動プロンプト入力機能</li>
+                    <li><strong>Stable Diffusion WebUI</strong> - txt2img/img2img連携</li>
+                    <li><strong>その他サービス</strong> - Midjourney・DALL-E等への対応</li>
+                </ul>
+
+                <h4>ブラウザ拡張連携</h4>
+                <ul>
+                    <li><strong>翻訳拡張</strong> - 外部翻訳ツールとの連携</li>
+                    <li><strong>メモ・管理ツール</strong> - Notion・Obsidian等との連携</li>
+                    <li><strong>画像管理</strong> - Eagle・XnView等との連携</li>
+                </ul>
+
+                <div class="tip-box success">
+                    <strong>✅ 設定の推奨構成</strong>
+                    <ul>
+                        <li><strong>初心者</strong>：全てデフォルト設定のまま使用開始</li>
+                        <li><strong>中級者</strong>：翻訳品質・検索精度を「品質重視」に変更</li>
+                        <li><strong>上級者</strong>：パフォーマンス設定を環境に合わせて最適化</li>
+                        <li><strong>プロ用途</strong>：バックアップ・同期設定を必ず有効化</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- ショートカットキー -->
+            <section class="content-section">
+                <h2>⌨️ ショートカットキー活用</h2>
+
+                <h3>基本ショートカット</h3>
+                <p>
+                    PromptGeneratorは豊富なキーボードショートカットで、
+                    <strong>マウス操作を最小限</strong>に抑えた効率的な操作が可能です。
+                </p>
+
+                <h3>🚀 全般操作</h3>
+                <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                    <tr style="background: var(--bg-card); border: 1px solid var(--border-default);">
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">キー</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">機能</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">説明</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Alt + G</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">拡張機能を開く</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">どこからでもPromptGeneratorを起動</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + ,</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">設定を開く</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">設定画面に素早くアクセス</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>F1</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">ヘルプを表示</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">使い方ガイドを表示</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Esc</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">モーダルを閉じる</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">開いているダイアログを閉じる</td>
+                    </tr>
+                </table>
+
+                <h3>🔍 検索タブ</h3>
+                <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                    <tr style="background: var(--bg-card);">
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">キー</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">機能</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">説明</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + F</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">検索フォーカス</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">検索入力欄にフォーカス</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Enter</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">検索実行</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">入力キーワードで検索</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>↓ ↑</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">結果選択</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">検索結果をキーボードで選択</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + Enter</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">選択項目を追加</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">選択した要素を編集タブに追加</td>
+                    </tr>
+                </table>
+
+                <h3>✏️ 編集タブ</h3>
+                <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                    <tr style="background: var(--bg-card);">
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">キー</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">機能</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">説明</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + Enter</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">翻訳実行</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">選択要素またはすべて翻訳</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + D</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">要素削除</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">選択した要素を削除</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + ↑ ↓</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">要素移動</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">選択要素を上下に移動</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + N</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">新要素追加</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">リスト下部に空要素追加</td>
+                    </tr>
+                </table>
+
+                <h3>🎯 Generate・ヘッダー</h3>
+                <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                    <tr style="background: var(--bg-card);">
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">キー</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">機能</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">説明</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + G</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">Generate実行</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">プロンプト生成を実行</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + C</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">結果をコピー</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">生成結果をクリップボードにコピー</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + H</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">履歴を表示</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">Generate履歴を開く</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + R</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">すべてリセット</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">編集内容をクリア</td>
+                    </tr>
+                </table>
+
+                <h3>📚 辞書・スロット</h3>
+                <table style="width: 100%; border-collapse: collapse; margin: 1rem 0;">
+                    <tr style="background: var(--bg-card);">
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">キー</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">機能</th>
+                        <th style="padding: 12px; border: 1px solid var(--border-default); text-align: left;">説明</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + Shift + S</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">お気に入りに保存</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">現在のプロンプトを辞書に保存</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + 1-9</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">スロット呼び出し</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">指定番号のスロットを呼び出し</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);"><kbd>Ctrl + Shift + 1-9</kbd></td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">スロットに保存</td>
+                        <td style="padding: 8px; border: 1px solid var(--border-default);">指定番号のスロットに保存</td>
+                    </tr>
+                </table>
+
+                <h3>🎯 ショートカット活用のコツ</h3>
+
+                <h4>効率的なワークフロー</h4>
+                <ol>
+                    <li><kbd>Alt + G</kbd> で拡張機能起動</li>
+                    <li><kbd>Ctrl + F</kbd> で検索開始</li>
+                    <li><kbd>Enter</kbd> → <kbd>↓↑</kbd> → <kbd>Ctrl + Enter</kbd> で要素追加</li>
+                    <li><kbd>Ctrl + ↑↓</kbd> で並び替え</li>
+                    <li><kbd>Ctrl + Enter</kbd> で翻訳</li>
+                    <li><kbd>Ctrl + G</kbd> でGenerate</li>
+                    <li><kbd>Ctrl + C</kbd> でコピー完了</li>
+                </ol>
+
+                <h4>カスタムショートカット</h4>
+                <p>設定画面で、よく使う機能に独自のショートカットを割り当て可能：</p>
+                <ul>
+                    <li><strong>頻繁に使う検索キーワード</strong></li>
+                    <li><strong>定型的な要素組み合わせ</strong></li>
+                    <li><strong>特定の記法切り替え</strong></li>
+                    <li><strong>お気に入りプロンプトの呼び出し</strong></li>
+                </ul>
+
+                <div class="tip-box success">
+                    <strong>✅ ショートカット習得の段階的アプローチ</strong>
+                    <ol>
+                        <li><strong>Week 1</strong>：基本操作（Alt+G, Ctrl+F, Enter）を覚える</li>
+                        <li><strong>Week 2</strong>：編集系（Ctrl+D, Ctrl+↑↓）を追加</li>
+                        <li><strong>Week 3</strong>：Generate系（Ctrl+G, Ctrl+C）をマスター</li>
+                        <li><strong>Week 4</strong>：応用操作（Ctrl+Shift+S, Ctrl+1-9）を習得</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- トラブルシューティング -->
+            <section class="content-section" id="troubleshooting">
+                <h2>🔧 トラブルシューティング</h2>
+
+                <h3>よくある問題と解決法</h3>
+
+                <h4>🌐 翻訳が動かない場合</h4>
+                <div class="tip-box warning">
+                    <strong>症状</strong>：翻訳ボタンを押しても反応がない、エラーが表示される
+                    
+                    <strong>解決手順</strong>：
+                    <ol>
+                        <li><strong>インターネット接続確認</strong> - ネットワークが正常か確認</li>
+                        <li><strong>翻訳エンジン切り替え</strong> - 設定で別の翻訳エンジンを試す</li>
+                        <li><strong>要素の確認</strong> - 翻訳対象の要素が選択されているか確認</li>
+                        <li><strong>文字数制限</strong> - 1回の翻訳文字数が上限を超えていないか</li>
+                        <li><strong>拡張機能の再起動</strong> - 拡張機能を無効→有効で再起動</li>
+                    </ol>
+                </div>
+
+                <h4>🚀 Generateが正常に動作しない</h4>
+                <div class="tip-box warning">
+                    <strong>症状</strong>：Generateボタンを押しても結果が表示されない
+                    
+                    <strong>解決手順</strong>：
+                    <ol>
+                        <li><strong>編集タブの内容確認</strong> - 要素が正常に入力されているか</li>
+                        <li><strong>記法選択確認</strong> - SD記法・NAI記法・自動整形無しのいずれかが選択されているか</li>
+                        <li><strong>ブラウザコンソール確認</strong> - F12でエラーログを確認</li>
+                        <li><strong>メモリ不足の可能性</strong> - 他のタブを閉じてメモリを確保</li>
+                        <li><strong>データの再読み込み</strong> - 拡張機能の「再読み込み」ボタン</li>
+                    </ol>
+                </div>
+
+                <h4>💾 データが保存されない・消失した</h4>
+                <div class="tip-box danger">
+                    <strong>症状</strong>：辞書・スロット・設定データが保存されない、または消失した
+                    
+                    <strong>解決手順</strong>：
+                    <ol>
+                        <li><strong>ブラウザストレージ確認</strong> - Chrome設定でストレージクォータ確認</li>
+                        <li><strong>他のブラウザで確認</strong> - Edge・FirefoxでデータがあるかV確認</li>
+                        <li><strong>バックアップファイル確認</strong> - CSVエクスポートファイルがないか確認</li>
+                        <li><strong>同期設定確認</strong> - Chrome同期がオンになっているか確認</li>
+                        <li><strong>拡張機能の権限確認</strong> - ストレージアクセス権限があるか確認</li>
+                    </ol>
+                </div>
+
+                <h4>⚡ 動作が重い・遅い</h4>
+                <div class="tip-box warning">
+                    <strong>症状</strong>：検索・編集・Generate等の動作が極端に遅い
+                    
+                    <strong>解決手順</strong>：
+                    <ol>
+                        <li><strong>データ量の確認</strong> - 辞書・スロット・履歴のデータ量確認</li>
+                        <li><strong>古いデータの整理</strong> - 不要な履歴・辞書項目を削除</li>
+                        <li><strong>パフォーマンス設定調整</strong> - 設定でキャッシュサイズを調整</li>
+                        <li><strong>メモリ解放</strong> - ブラウザを再起動してメモリクリア</li>
+                        <li><strong>他の拡張機能無効化</strong> - 競合する拡張機能がないか確認</li>
+                    </ol>
+                </div>
+
+                <h3>🆘 緊急時の対処法</h3>
+
+                <h4>完全に動作しなくなった場合</h4>
+                <ol>
+                    <li><strong>データバックアップ</strong> - 可能であれば重要データをエクスポート</li>
+                    <li><strong>拡張機能の再インストール</strong> - 完全に削除してから再インストール</li>
+                    <li><strong>バックアップからの復旧</strong> - CSVファイルからデータをインポート</li>
+                    <li><strong>設定の再構築</strong> - 基本設定から再度カスタマイズ</li>
+                </ol>
+
+                <h4>開発者への問題報告</h4>
+                <p>解決しない問題がある場合は、以下の情報と共に報告してください：</p>
+                <ul>
+                    <li><strong>発生状況</strong> - いつ、どの操作で問題が発生したか</li>
+                    <li><strong>環境情報</strong> - ブラウザバージョン、OS、拡張機能バージョン</li>
+                    <li><strong>エラーメッセージ</strong> - コンソールログやエラー文章</li>
+                    <li><strong>再現手順</strong> - 問題を確実に再現できる手順</li>
+                    <li><strong>期待値vs実際の結果</strong> - 何を期待していて、何が起こったか</li>
+                </ul>
+
+                <div class="tip-box success">
+                    <strong>✅ 予防策・メンテナンス</strong>
+                    <ul>
+                        <li><strong>定期バックアップ</strong> - 月1回のデータエクスポート</li>
+                        <li><strong>データ整理</strong> - 古い履歴・不要な辞書項目の削除</li>
+                        <li><strong>設定の記録</strong> - カスタマイズした設定内容を別途記録</li>
+                        <li><strong>アップデート確認</strong> - 定期的な拡張機能バージョン確認</li>
+                        <li><strong>動作テスト</strong> - 重要な操作は定期的に動作確認</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 妖精のアドバイス -->
+            <section class="fairy-message">
+                <div class="message-content">
+                    <div class="fairy-character">
+                        <span class="fairy-icon">🧚‍♀️</span>
+                        <span class="fairy-name">アリスちゃん</span>
+                    </div>
+                    <div class="message-text">
+                        <p>
+                            ヘッダー機能は全ての作業の「出口」となる重要な部分です、なのです！✨<br>
+                            Generate機能をマスターすれば、あなたの創作活動が格段に効率化されますよ〜<br>
+                            ショートカットキーを覚えると、もう手放せなくなること間違いなしです！<br>
+                            問題が起きた時も、慌てずにトラブルシューティングを参考にしてくださいね🔧<br>
+                            これで全ての機能説明が完了です！素晴らしいプロンプトをたくさん作ってください〜🌟
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ページナビゲーション -->
+            <nav class="page-nav">
+                <a href="slot.html" class="nav-btn">← スロットタブの使い方</a>
+                <span>🎉 全ての機能説明が完了しました！</span>
+                <a href="index.html" class="nav-btn">ガイド目次に戻る →</a>
+            </nav>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <p>© 2024 PromptGenerator. Created with 💜 by hirsaeki</p>
+                <p><a href="index.html">← ガイド目次に戻る</a> | <a href="../index.html">配布ページ</a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

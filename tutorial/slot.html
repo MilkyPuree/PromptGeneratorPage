@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スロットタブの使い方 - PromptGenerator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/hirsaeki/PromptGenerator-for-NovelAI/main/PromptGeneratorPlus/assets/icon/Icon128.png">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="nav-left">
+                    <h1>💾 スロットタブの使い方</h1>
+                </div>
+                <div class="nav-right">
+                    <a href="index.html" class="nav-link">← ガイド目次に戻る</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="tutorial-wrapper">
+            <!-- 概要 -->
+            <section class="content-section">
+                <h2>🎯 スロットタブとは</h2>
+                <p>
+                    スロットタブは、編集タブで完成したプロンプトを<strong>「スロット」</strong>という単位で保存・管理し、
+                    必要な時に素早く呼び出すことができる機能です。
+                </p>
+                <p>
+                    <strong>主要機能</strong>：
+                </p>
+                <ul>
+                    <li><strong>プロンプトスロット保存</strong> - 完成したプロンプトを番号付きで管理</li>
+                    <li><strong>グループ管理</strong> - 用途別・テーマ別にスロットを分類</li>
+                    <li><strong>結合プレビュー</strong> - 複数スロットを組み合わせて確認</li>
+                    <li><strong>ワンクリック呼び出し</strong> - 保存したプロンプトを即座に編集タブに復元</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 スロットタブの位置づけ</strong><br>
+                    スロットは「完成したプロンプトの保管庫」です。よく使う組み合わせや、
+                    時間をかけて調整した理想的なプロンプトを保存して、いつでも再利用できます。
+                </div>
+            </section>
+
+            <!-- スロットモードの種類 -->
+            <section class="content-section">
+                <h2>🎛️ スロットモードの種類</h2>
+                
+                <p>各スロットには4つのモードがあり、用途に応じて選択できます：</p>
+                
+                <h3>1. 通常モード（normal）</h3>
+                <p><strong>特徴</strong>: 標準的なプロンプト保存・管理</p>
+                <ul>
+                    <li>✅ <strong>編集タブで複数要素表示</strong> - 要素ごとに個別編集可能</li>
+                    <li>✅ <strong>重み調整対応</strong> - 各要素の重み値を個別に調整</li>
+                    <li>✅ <strong>並び替え・削除</strong> - ドラッグ&ドロップで順序変更</li>
+                    <li>✅ <strong>Generate時結合</strong> - 全要素が結合されて出力</li>
+                </ul>
+                
+                <h3>2. 単一モード（single）</h3>
+                <p><strong>特徴</strong>: 一つのまとまったプロンプトとして管理</p>
+                <ul>
+                    <li>📝 <strong>単一テキスト表示</strong> - 編集タブで一つのテキストとして編集</li>
+                    <li>🔧 <strong>内部保存形式</strong> - カンマ区切りで保存、スペース区切りで表示</li>
+                    <li>⚡ <strong>Generate時出力</strong> - スペース区切りで出力</li>
+                </ul>
+                
+                <h3>3. ランダム抽出モード（random）</h3>
+                <p><strong>特徴</strong>: 指定カテゴリからランダム選択</p>
+                <ul>
+                    <li>🎲 <strong>毎回異なる結果</strong> - Generate実行時にランダム抽出</li>
+                    <li>👁️ <strong>読み取り専用表示</strong> - 編集タブは抽出モード表示</li>
+                    <li>🎯 <strong>カテゴリ指定</strong> - 抽出対象カテゴリを設定</li>
+                    <li>🔄 <strong>無限バリエーション</strong> - 同じ設定で様々なプロンプト生成</li>
+                </ul>
+                
+                <h3>4. 連続抽出モード（sequential）</h3>
+                <p><strong>特徴</strong>: 指定カテゴリから順番に選択</p>
+                <ul>
+                    <li>📋 <strong>順序性のある抽出</strong> - カテゴリから要素を順次抽出</li>
+                    <li>👁️ <strong>読み取り専用表示</strong> - 編集タブは抽出モード表示</li>
+                    <li>🔢 <strong>系統的な生成</strong> - 順序立ったプロンプト生成に最適</li>
+                    <li>🎯 <strong>カテゴリ指定</strong> - 抽出対象カテゴリを設定</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <strong>💡 モードの使い分け</strong><br>
+                    <strong>通常・単一</strong>：確定したプロンプトの保存用<br>
+                    <strong>ランダム・連続</strong>：バリエーション豊かな生成用<br>
+                    用途に応じてモードを選択することで、効率的なプロンプト管理が可能です。
+                </div>
+            </section>
+
+            <!-- スロット管理の制限と容量 -->
+            <section class="content-section">
+                <h2>📊 スロット管理の仕様</h2>
+                
+                <h3>容量制限</h3>
+                <ul>
+                    <li><strong>最大スロット数</strong>: 100スロット（1グループあたり）</li>
+                    <li><strong>最大グループ数</strong>: 20グループ</li>
+                    <li><strong>総合容量</strong>: 最大2000スロット（100×20）まで管理可能</li>
+                </ul>
+                
+                <h3>グループ管理機能</h3>
+                <ul>
+                    <li><strong>用途別分類</strong> - プロジェクト・テーマごとにグループ作成</li>
+                    <li><strong>名前変更・削除</strong> - グループ管理モーダルで詳細設定</li>
+                    <li><strong>説明文設定</strong> - 各グループに説明文を追加可能</li>
+                </ul>
+                
+                <div class="tip-box">
+                    <strong>💡 大容量管理のメリット</strong><br>
+                    豊富なスロット数により、ジャンル別・キャラクター別・用途別など、
+                    様々な分類でプロンプトを体系的に管理できます。
+                </div>
+            </section>
+
+            <!-- スロットの基本操作 -->
+            <section class="content-section">
+                <h2>💾 スロットの基本操作</h2>
+
+                <h3>プロンプトをスロットに保存</h3>
+                <ol>
+                    <li><strong>編集タブでプロンプトを完成</strong></li>
+                    <li><strong>スロットタブに切り替え</strong></li>
+                    <li><strong>空のスロットの「保存」ボタンをクリック</strong></li>
+                    <li><strong>現在のプロンプトがスロットに保存完了</strong></li>
+                </ol>
+
+                <h3>スロットからプロンプトを呼び出し</h3>
+                <ol>
+                    <li><strong>使いたいスロットの「使用」ボタンをクリック</strong></li>
+                    <li><strong>編集タブに自動的にプロンプトが読み込まれる</strong></li>
+                    <li><strong>必要に応じて編集タブで微調整</strong></li>
+                    <li><strong>Generateで画像生成実行</strong></li>
+                </ol>
+
+                <h3>スロットの編集・管理</h3>
+                <ul>
+                    <li><strong>「編集」ボタン</strong> - スロット内容を直接編集</li>
+                    <li><strong>「クリア」ボタン</strong> - スロットの内容を空にする</li>
+                    <li><strong>「すべてクリア」ボタン</strong> - グループ内の全スロットを空にする</li>
+                </ul>
+
+                <div class="tip-box success">
+                    <strong>✅ スロット活用のコツ</strong>
+                    <ul>
+                        <li>完成度の高いプロンプトのみ保存する</li>
+                        <li>スロット保存前に必ずGenerate結果を確認</li>
+                        <li>似たようなバリエーションを複数保存</li>
+                        <li>定期的に古いスロットを整理する</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- グループ管理機能 -->
+            <section class="content-section">
+                <h2>📁 グループ管理機能</h2>
+
+                <h3>グループとは</h3>
+                <p>
+                    グループは、関連するスロットをまとめて管理する機能です。
+                    <strong>最大20グループ</strong>まで作成でき、各グループに<strong>最大100スロット</strong>を保存できます。
+                </p>
+
+                <h3>🎨 効果的なグループ分類例</h3>
+
+                <h4>テーマ別分類</h4>
+                <ul>
+                    <li><strong>「美少女ポートレート」</strong> - 人物中心のプロンプト</li>
+                    <li><strong>「ファンタジー世界」</strong> - 魔法・幻想系のプロンプト</li>
+                    <li><strong>「現代日常」</strong> - リアルな現代設定のプロンプト</li>
+                    <li><strong>「風景・背景」</strong> - 背景メインのプロンプト</li>
+                </ul>
+
+                <h4>用途別分類</h4>
+                <ul>
+                    <li><strong>「お気に入り」</strong> - 特に気に入った完成品</li>
+                    <li><strong>「実験中」</strong> - テスト・調整中のプロンプト</li>
+                    <li><strong>「コミッション用」</strong> - 依頼作品用のプロンプト</li>
+                    <li><strong>「学習用」</strong> - スタイル研究用のプロンプト</li>
+                </ul>
+
+                <h4>品質別分類</h4>
+                <ul>
+                    <li><strong>「高品質確定」</strong> - Generate結果が安定したプロンプト</li>
+                    <li><strong>「調整が必要」」</strong> - 改良の余地があるプロンプト</li>
+                    <li><strong>「ベース素材」</strong> - 他のプロンプトの基礎となるもの</li>
+                </ul>
+
+                <h3>グループの作成・管理</h3>
+                
+                <h4>新しいグループを作成</h4>
+                <ol>
+                    <li><strong>「+ 新規グループ」ボタンをクリック</strong></li>
+                    <li><strong>グループ名を入力</strong>（例：「美少女コレクション」）</li>
+                    <li><strong>説明文を入力</strong>（任意）</li>
+                    <li><strong>「作成」ボタンで完了</strong></li>
+                </ol>
+
+                <h4>グループの切り替え・管理</h4>
+                <ul>
+                    <li><strong>グループセレクター</strong> - ドロップダウンで現在のグループを選択</li>
+                    <li><strong>「グループ管理」ボタン</strong> - 名前変更・削除・並び替え</li>
+                    <li><strong>グループ説明</strong> - 各グループの用途説明を表示</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 グループ管理のベストプラクティス</strong><br>
+                    最初は「デフォルト」「お気に入り」「実験中」の3つから始めて、
+                    スロットが増えてきたら詳細なテーマ別に分割するのがおすすめです。
+                </div>
+            </section>
+
+            <!-- 結合プレビュー機能 -->
+            <section class="content-section">
+                <h2>🔗 結合プレビュー機能</h2>
+
+                <h3>結合プレビューとは</h3>
+                <p>
+                    現在のグループで使用中の全スロットを自動的に結合し、
+                    最終的なプロンプトを確認できる便利な機能です。
+                </p>
+
+                <h3>🎯 活用シーン</h3>
+                
+                <h4>1. 複数要素の組み合わせ確認</h4>
+                <p>異なるスロットに保存した要素が、組み合わせた時にどう見えるかを事前確認</p>
+                <ul>
+                    <li>スロット1: キャラクター設定</li>
+                    <li>スロット2: 服装・アクセサリー</li>
+                    <li>スロット3: 背景・環境</li>
+                    <li>→ 結合プレビューで最終形を確認</li>
+                </ul>
+
+                <h4>2. プロンプト長の管理</h4>
+                <p>全スロット結合時の文字数やトークン数をチェック</p>
+                <ul>
+                    <li>AI生成サービスの文字数制限確認</li>
+                    <li>冗長な表現の重複チェック</li>
+                    <li>バランスの良い要素配分の確認</li>
+                </ul>
+
+                <h4>3. 最終調整前の品質確認</h4>
+                <p>Generate実行前の最終チェック</p>
+                <ul>
+                    <li>矛盾する要素がないか確認</li>
+                    <li>重み値のバランス確認</li>
+                    <li>翻訳後の自然さチェック</li>
+                </ul>
+
+                <h3>🔧 結合プレビューの使い方</h3>
+                <ol>
+                    <li><strong>使用したいスロットを複数準備</strong></li>
+                    <li><strong>「結合プレビュー」ボタンをクリック</strong></li>
+                    <li><strong>プレビューウィンドウで結合結果を確認</strong></li>
+                    <li><strong>問題なければ「編集タブに送る」で確定</strong></li>
+                    <li><strong>調整が必要なら個別スロットを編集</strong></li>
+                </ol>
+
+                <div class="tip-box success">
+                    <strong>✅ 結合プレビューの高度な活用</strong>
+                    <ul>
+                        <li>キャラクター・服装・背景を別スロットで管理</li>
+                        <li>時間帯・天候・季節を切り替え用スロットで保存</li>
+                        <li>表情・ポーズのバリエーションを複数スロットで準備</li>
+                        <li>品質向上用の共通要素を専用スロットで管理</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- スロット情報の見方 -->
+            <section class="content-section">
+                <h2>📊 スロット情報の見方</h2>
+
+                <h3>スロットカードの表示内容</h3>
+                <p>各スロットには以下の情報が表示されます：</p>
+
+                <h4>📋 基本情報</h4>
+                <ul>
+                    <li><strong>スロット番号</strong> - グループ内での識別番号</li>
+                    <li><strong>プロンプト内容</strong> - 保存されているプロンプトのプレビュー</li>
+                    <li><strong>保存日時</strong> - いつ保存されたかの記録</li>
+                    <li><strong>文字数</strong> - プロンプトの文字数表示</li>
+                </ul>
+
+                <h4>🎛️ 操作ボタン</h4>
+                <ul>
+                    <li><strong>「使用」ボタン</strong> - 編集タブに読み込み</li>
+                    <li><strong>「編集」ボタン</strong> - スロット内容を直接編集</li>
+                    <li><strong>「クリア」ボタン</strong> - スロットを空にする</li>
+                </ul>
+
+                <h3>📈 使用状況の確認</h3>
+                <p>スロット情報バーで現在の使用状況を確認できます：</p>
+                <ul>
+                    <li><strong>「使用中: X/Y」</strong> - 現在使用中のスロット数/総スロット数</li>
+                    <li><strong>グループ説明</strong> - 現在のグループの用途説明</li>
+                    <li><strong>最終更新日</strong> - グループの最終更新日時</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 スロット管理のコツ</strong><br>
+                    定期的に古いスロットを見直し、使わなくなったものはクリアして整理しましょう。
+                    また、保存日時を参考に、最近の成功パターンを把握することで上達につながります。
+                </div>
+            </section>
+
+            <!-- 抽出モード機能 -->
+            <section class="content-section">
+                <h2>🎯 抽出モード機能</h2>
+
+                <h3>抽出モードとは</h3>
+                <p>
+                    抽出モードは、現在のプロンプト（編集タブの内容）から<strong>特定の要素を自動抽出</strong>し、
+                    指定したスロットに分類保存する高度な機能です。
+                </p>
+
+                <h3>🔧 抽出モードの使い方</h3>
+                
+                <h4>基本操作手順</h4>
+                <ol>
+                    <li><strong>編集タブでプロンプトを完成</strong></li>
+                    <li><strong>スロットタブの「抽出モード」ボタンをクリック</strong></li>
+                    <li><strong>抽出ルールを選択・設定</strong></li>
+                    <li><strong>「抽出実行」で自動分類開始</strong></li>
+                    <li><strong>結果を確認・微調整</strong></li>
+                </ol>
+
+                <h3>🎨 抽出ルールの種類</h3>
+
+                <h4>1. カテゴリ別抽出</h4>
+                <p>マスターデータのカテゴリに基づいて自動分類：</p>
+                <ul>
+                    <li><strong>キャラクター要素</strong> → スロット1</li>
+                    <li><strong>髪型・外見要素</strong> → スロット2</li>
+                    <li><strong>服装・アクセサリー</strong> → スロット3</li>
+                    <li><strong>背景・環境要素</strong> → スロット4</li>
+                </ul>
+
+                <h4>2. 重み値別抽出</h4>
+                <p>重み値の範囲に基づいて重要度別に分類：</p>
+                <ul>
+                    <li><strong>高重要（1.1以上）</strong> → スロット1</li>
+                    <li><strong>標準（0.9-1.0）</strong> → スロット2</li>
+                    <li><strong>補助（0.8以下）</strong> → スロット3</li>
+                </ul>
+
+                <h4>3. カスタム抽出</h4>
+                <p>ユーザー定義のキーワードやパターンで分類：</p>
+                <ul>
+                    <li><strong>指定キーワード含有</strong> → 該当スロット</li>
+                    <li><strong>文字数による分類</strong> → 長さ別スロット</li>
+                    <li><strong>言語別分類</strong> → 日本語/英語別スロット</li>
+                </ul>
+
+                <h3>🎯 抽出モードの活用シーン</h3>
+
+                <h4>1. 大型プロンプトの分解</h4>
+                <p>複雑な長いプロンプトを要素別に整理：</p>
+                <pre><code>入力: 複雑な50要素のプロンプト
+↓ 抽出モード実行
+スロット1: キャラクター関連（8要素）
+スロット2: 外見・服装（15要素）
+スロット3: ポーズ・表情（12要素）
+スロット4: 背景・環境（15要素）</code></pre>
+
+                <h4>2. テーマ別要素の分離</h4>
+                <p>異なるテーマの要素を自動で分離：</p>
+                <ul>
+                    <li><strong>現実的要素</strong> vs <strong>ファンタジー要素</strong></li>
+                    <li><strong>現代的要素</strong> vs <strong>古典的要素</strong></li>
+                    <li><strong>明るい要素</strong> vs <strong>暗い要素</strong></li>
+                </ul>
+
+                <h4>3. バリエーション作成の準備</h4>
+                <p>基本プロンプトから派生パターン作成用の素材準備：</p>
+                <ul>
+                    <li>基本構成をスロット1に保存</li>
+                    <li>変更可能要素をスロット2-4に分類</li>
+                    <li>組み合わせ変更で多数のバリエーション生成</li>
+                </ul>
+
+                <h3>⚙️ 抽出設定のカスタマイズ</h3>
+
+                <h4>抽出精度の調整</h4>
+                <ul>
+                    <li><strong>厳密モード</strong> - 完全一致のみで分類（高精度・低網羅性）</li>
+                    <li><strong>柔軟モード</strong> - 類似要素も含めて分類（低精度・高網羅性）</li>
+                    <li><strong>バランスモード</strong> - 精度と網羅性のバランス（推奨）</li>
+                </ul>
+
+                <h4>除外設定</h4>
+                <ul>
+                    <li><strong>共通要素の除外</strong> - 「high quality」等の汎用要素を除外</li>
+                    <li><strong>短い要素の除外</strong> - 3文字以下等の短い要素を除外</li>
+                    <li><strong>重複要素の統合</strong> - 類似要素をまとめて処理</li>
+                </ul>
+
+                <h3>🚀 抽出後の活用テクニック</h3>
+
+                <h4>1. レイヤー合成方式</h4>
+                <p>分類された各スロットを「レイヤー」として活用：</p>
+                <ol>
+                    <li>ベースレイヤー（キャラクター）を選択</li>
+                    <li>装飾レイヤー（服装・アクセサリー）を追加</li>
+                    <li>環境レイヤー（背景・照明）で仕上げ</li>
+                    <li>結合プレビューで最終確認</li>
+                </ol>
+
+                <h4>2. A/Bテスト方式</h4>
+                <p>同じカテゴリの要素を複数スロットで管理：</p>
+                <ul>
+                    <li>スロット2A: 髪型パターンA（ロングヘア系）</li>
+                    <li>スロット2B: 髪型パターンB（ショートヘア系）</li>
+                    <li>他要素は共通、髪型のみ切り替えてテスト</li>
+                </ul>
+
+                <h4>3. 段階的構築方式</h4>
+                <p>重要度順にスロットを組み合わせ：</p>
+                <ol>
+                    <li>スロット1のみで基本形確認</li>
+                    <li>スロット1+2で主要要素確認</li>
+                    <li>スロット1+2+3で詳細追加</li>
+                    <li>全スロット結合で完成形</li>
+                </ol>
+
+                <div class="tip-box success">
+                    <strong>✅ 抽出モード活用のプロ技</strong>
+                    <ul>
+                        <li><strong>定期的な抽出実行</strong> - 月1回程度で蓄積プロンプトを整理</li>
+                        <li><strong>抽出結果の再編集</strong> - 自動分類後に手動で微調整</li>
+                        <li><strong>抽出パターンの保存</strong> - よく使う抽出設定をテンプレート化</li>
+                        <li><strong>他の機能との連携</strong> - 抽出結果を辞書タブにも保存</li>
+                    </ul>
+                </div>
+
+                <div class="tip-box warning">
+                    <strong>⚠ 抽出モード使用時の注意点</strong>
+                    <ul>
+                        <li>抽出前に必ず元プロンプトをバックアップ</li>
+                        <li>自動分類は100%完璧ではないため、結果を必ず確認</li>
+                        <li>大量要素の抽出は時間がかかる場合があります</li>
+                        <li>カスタム抽出ルールは事前にテストしてから本格運用</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 実践的な活用例 -->
+            <section class="content-section">
+                <h2>🎨 実践的な活用例</h2>
+
+                <h3>例1: キャラクター別管理システム</h3>
+                
+                <h4>グループ構成</h4>
+                <ul>
+                    <li><strong>「美少女A」グループ</strong>
+                        <ul>
+                            <li>スロット1: 基本設定（キャラ・髪型・目）</li>
+                            <li>スロット2: 学校制服バージョン</li>
+                            <li>スロット3: カジュアル服バージョン</li>
+                            <li>スロット4: ファンタジー衣装バージョン</li>
+                        </ul>
+                    </li>
+                    <li><strong>「美少女B」グループ</strong>
+                        <ul>
+                            <li>スロット1: 基本設定（異なるキャラデザイン）</li>
+                            <li>スロット2-4: 各種衣装バリエーション</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h4>活用方法</h4>
+                <ol>
+                    <li>キャラクターグループを選択</li>
+                    <li>基本設定スロット + 衣装スロットを結合プレビュー</li>
+                    <li>気に入った組み合わせを編集タブに送る</li>
+                    <li>背景要素などを追加して完成</li>
+                </ol>
+
+                <h3>例2: シーン別テンプレート管理</h3>
+                
+                <h4>「日常シーン」グループ</h4>
+                <ul>
+                    <li>スロット1: 学校教室（昼間・明るい雰囲気）</li>
+                    <li>スロット2: 放課後の廊下（夕方・オレンジの光）</li>
+                    <li>スロット3: 図書館（静寂・集中している雰囲気）</li>
+                    <li>スロット4: カフェ（リラックス・現代的）</li>
+                </ul>
+
+                <h4>「ファンタジーシーン」グループ</h4>
+                <ul>
+                    <li>スロット1: 古代の森（神秘的・エルフの住処）</li>
+                    <li>スロット2: 魔法学院（魔法陣・書物・幻想的）</li>
+                    <li>スロット3: 城の謁見室（豪華・中世ヨーロッパ風）</li>
+                    <li>スロット4: 竜の洞窟（危険・宝物・冒険）</li>
+                </ul>
+
+                <h3>例3: 品質レベル別管理</h3>
+                
+                <h4>「S級プロンプト」グループ</h4>
+                <p>Generate結果が常に高品質なプロンプトのみ</p>
+                <ul>
+                    <li>重み値が最適化済み</li>
+                    <li>翻訳品質が完璧</li>
+                    <li>要素のバランスが理想的</li>
+                    <li>AI生成結果が安定している</li>
+                </ul>
+
+                <h4>「実験中」グループ</h4>
+                <p>調整・改良を重ねているプロンプト</p>
+                <ul>
+                    <li>新しい組み合わせのテスト</li>
+                    <li>重み値の調整実験</li>
+                    <li>翻訳品質の改善作業</li>
+                    <li>要素の追加・削除テスト</li>
+                </ul>
+
+                <div class="tip-box success">
+                    <strong>✅ プロ級スロット活用術</strong>
+                    <ol>
+                        <li><strong>レイヤー分割保存</strong> - キャラ・服装・背景を別スロットで管理</li>
+                        <li><strong>バリエーション展開</strong> - 基本形から派生パターンを複数作成</li>
+                        <li><strong>季節・時間別保存</strong> - 同じ構成を時間帯別にアレンジ</li>
+                        <li><strong>品質段階別管理</strong> - 完成度に応じてグループ分け</li>
+                        <li><strong>定期的な見直し</strong> - 月1回程度で古いスロットを整理</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- データ管理とバックアップ -->
+            <section class="content-section">
+                <h2>🔒 データ管理とバックアップ</h2>
+
+                <h3>スロットデータの保存場所</h3>
+                <p>
+                    スロットデータはブラウザの<strong>ローカルストレージ</strong>に保存されます。
+                    これにより高速アクセスが可能ですが、適切な管理が重要です。
+                </p>
+
+                <h3>⚠️ データ消失のリスク</h3>
+                <ul>
+                    <li><strong>ブラウザの初期化</strong> - 設定リセット時にデータが消失</li>
+                    <li><strong>拡張機能の再インストール</strong> - アンインストール時にデータが削除</li>
+                    <li><strong>ストレージの上限</strong> - ブラウザの容量制限による自動削除</li>
+                    <li><strong>PCの故障・交換</strong> - ハードウェア障害時のデータ損失</li>
+                </ul>
+
+                <h3>🛡️ バックアップの推奨方法</h3>
+                
+                <h4>1. 定期的なエクスポート</h4>
+                <ul>
+                    <li>重要なスロットは定期的にテキストファイルで保存</li>
+                    <li>月1回程度のバックアップを習慣化</li>
+                    <li>クラウドストレージ（Google Drive等）で同期</li>
+                </ul>
+
+                <h4>2. 複数環境での管理</h4>
+                <ul>
+                    <li>メインPC + サブPCで同じプロンプトを保存</li>
+                    <li>別ブラウザ（Chrome + Edge）で二重管理</li>
+                    <li>重要なプロンプトは手動でも記録</li>
+                </ul>
+
+                <h4>3. 外部ツールとの連携</h4>
+                <ul>
+                    <li>お気に入りプロンプトは辞書タブにも保存</li>
+                    <li>テキストエディタで管理ファイルを作成</li>
+                    <li>画像生成結果と合わせてプロンプトを記録</li>
+                </ul>
+
+                <div class="tip-box danger">
+                    <strong>🚨 バックアップの重要性</strong><br>
+                    時間をかけて調整した完璧なプロンプトは、一度消失すると復元が困難です。
+                    特に重要なスロットは、必ず別の場所にもバックアップを保存してください。
+                </div>
+            </section>
+
+            <!-- 妖精のアドバイス -->
+            <section class="fairy-message">
+                <div class="message-content">
+                    <div class="fairy-character">
+                        <span class="fairy-icon">🧚‍♀️</span>
+                        <span class="fairy-name">リリィちゃん</span>
+                    </div>
+                    <div class="message-text">
+                        <p>
+                            スロットタブは「プロンプトの宝物庫」です、なのです！<br>
+                            最初は少ないスロットから始めて、良いプロンプトができるたびに保存していけば、
+                            どんどん便利な資産が貯まっていきますよ〜✨<br>
+                            グループ機能も活用して、整理整頓を心がけてくださいね！
+                            そして大切なプロンプトは必ずバックアップを忘れずに〜
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ページナビゲーション -->
+            <nav class="page-nav">
+                <a href="dictionary.html" class="nav-btn">← 辞書タブの使い方</a>
+                <span>最後にヘッダー機能を確認しましょう</span>
+                <a href="header.html" class="nav-btn">ヘッダー機能の使い方 →</a>
+            </nav>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <p>© 2024 PromptGenerator. Created with 💜 by hirsaeki</p>
+                <p><a href="index.html">← ガイド目次に戻る</a> | <a href="../index.html">配布ページ</a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

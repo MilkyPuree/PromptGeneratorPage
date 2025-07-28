@@ -1,0 +1,664 @@
+/**
+ * PromptGenerator チュートリアルガイド 共通スタイルシート
+ */
+
+/* ================================
+   基本設定
+   ================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* 色定義 */
+    --primary-color: #7c3aed;
+    --secondary-color: #a855f7;
+    --accent-color: #8b5cf6;
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-tertiary: #0f3460;
+    --bg-card: #1e293b;
+    --text-primary: #e0e0e0;
+    --text-secondary: #a0a0a0;
+    --text-muted: #666;
+    --border-default: #334155;
+    --border-light: #475569;
+    
+    /* 成功・警告・危険色 */
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --info-color: #3b82f6;
+    
+    /* 難易度色 */
+    --beginner-color: #10b981;
+    --intermediate-color: #f59e0b;
+    --advanced-color: #ef4444;
+    
+    /* 影定義 */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    
+    /* スペーシング */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    
+    /* 角丸 */
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-lg: 1rem;
+    
+    /* トランジション */
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ================================
+   ヘッダー
+   ================================ */
+header {
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+    border-bottom: 1px solid var(--border-default);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: var(--shadow-md);
+}
+
+.nav-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-md) var(--spacing-xl);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-left h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.nav-link {
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.nav-link:hover {
+    background: var(--accent-color);
+    color: white;
+    transform: translateY(-1px);
+}
+
+/* ================================
+   メインコンテンツ
+   ================================ */
+main {
+    flex: 1;
+    width: 100%;
+}
+
+.tutorial-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-xl);
+}
+
+/* ================================
+   イントロセクション
+   ================================ */
+.intro-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.intro-content {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    text-align: center;
+}
+
+.intro-content h2 {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.intro-content > p {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-xl);
+}
+
+/* ================================
+   学習パス
+   ================================ */
+.learning-path {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
+}
+
+.learning-path h3 {
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
+    color: var(--accent-color);
+}
+
+.path-steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.path-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-default);
+    min-width: 150px;
+    box-shadow: var(--shadow-sm);
+}
+
+.step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    margin-bottom: var(--spacing-sm);
+}
+
+.step-content {
+    text-align: center;
+}
+
+.step-content strong {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
+}
+
+.step-content p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.path-arrow {
+    font-size: 1.5rem;
+    color: var(--accent-color);
+    font-weight: bold;
+}
+
+/* ================================
+   ガイドグリッド
+   ================================ */
+.guide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.guide-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+    height: fit-content;
+}
+
+.guide-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--accent-color);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--border-default);
+}
+
+.card-icon {
+    font-size: 2rem;
+}
+
+.card-header h3 {
+    flex: 1;
+    font-size: 1.3rem;
+    color: var(--text-primary);
+}
+
+.difficulty {
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.difficulty.beginner {
+    background: var(--beginner-color);
+    color: white;
+}
+
+.difficulty.intermediate {
+    background: var(--intermediate-color);
+    color: white;
+}
+
+.difficulty.advanced {
+    background: var(--advanced-color);
+    color: white;
+}
+
+.card-content p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.feature-list {
+    list-style: none;
+    margin-bottom: var(--spacing-lg);
+}
+
+.feature-list li {
+    padding: var(--spacing-xs) 0;
+    color: var(--text-secondary);
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.feature-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: var(--spacing-md);
+    border-top: 1px solid var(--border-default);
+}
+
+.reading-time {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.card-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--accent-color);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.card-link:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+/* ================================
+   クイックリファレンス
+   ================================ */
+.quick-reference {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.section-content h2 {
+    text-align: center;
+    margin-bottom: var(--spacing-xl);
+    color: var(--text-primary);
+}
+
+.reference-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.reference-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+}
+
+.reference-card h4 {
+    margin-bottom: var(--spacing-md);
+    color: var(--accent-color);
+}
+
+.reference-card ul {
+    list-style: none;
+}
+
+.reference-card li {
+    padding: var(--spacing-sm) 0;
+    color: var(--text-secondary);
+}
+
+.reference-card strong {
+    color: var(--text-primary);
+}
+
+kbd {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-default);
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+/* ================================
+   妖精メッセージ
+   ================================ */
+.fairy-message {
+    background: linear-gradient(135deg, var(--bg-tertiary), var(--bg-card));
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.message-content {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+}
+
+.fairy-character {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    background: var(--bg-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    min-width: 80px;
+}
+
+.fairy-icon {
+    font-size: 2rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+.fairy-name {
+    font-weight: 600;
+    color: var(--accent-color);
+    font-size: 0.9rem;
+}
+
+.message-text {
+    flex: 1;
+    background: var(--bg-primary);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.message-text p {
+    color: var(--text-secondary);
+    margin: 0;
+}
+
+/* ================================
+   コンテンツページ用スタイル
+   ================================ */
+.content-section {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+}
+
+.content-section h2 {
+    color: var(--accent-color);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border-default);
+}
+
+.content-section h3 {
+    color: var(--text-primary);
+    margin: var(--spacing-lg) 0 var(--spacing-md) 0;
+}
+
+.content-section h4 {
+    color: var(--text-primary);
+    margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+}
+
+.content-section p {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.content-section ul,
+.content-section ol {
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-md);
+    padding-left: var(--spacing-xl);
+}
+
+.content-section li {
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ヒントボックス */
+.tip-box {
+    background: var(--bg-card);
+    border-left: 4px solid var(--info-color);
+    padding: var(--spacing-md);
+    margin: var(--spacing-md) 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.tip-box.warning {
+    border-left-color: var(--warning-color);
+}
+
+.tip-box.success {
+    border-left-color: var(--success-color);
+}
+
+.tip-box.danger {
+    border-left-color: var(--danger-color);
+}
+
+/* コードブロック */
+code {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+}
+
+pre {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin: var(--spacing-md) 0;
+    border: 1px solid var(--border-default);
+}
+
+/* ナビゲーション */
+.page-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--bg-card);
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    margin: var(--spacing-xl) 0;
+}
+
+.nav-btn {
+    color: var(--text-primary);
+    text-decoration: none;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.nav-btn:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+.nav-btn.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* ================================
+   フッター
+   ================================ */
+footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-default);
+    margin-top: auto;
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--spacing-lg) var(--spacing-xl);
+}
+
+.footer-content {
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.footer-content p {
+    margin: var(--spacing-xs) 0;
+}
+
+.footer-content a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.footer-content a:hover {
+    text-decoration: underline;
+}
+
+/* ================================
+   レスポンシブ対応
+   ================================ */
+@media (max-width: 768px) {
+    .nav-container {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+    }
+    
+    .nav-left h1 {
+        font-size: 1.2rem;
+    }
+    
+    .tutorial-wrapper {
+        padding: var(--spacing-md);
+    }
+    
+    .intro-content h2 {
+        font-size: 1.5rem;
+    }
+    
+    .path-steps {
+        flex-direction: column;
+    }
+    
+    .path-arrow {
+        transform: rotate(90deg);
+    }
+    
+    .guide-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .reference-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .message-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .page-nav {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+}

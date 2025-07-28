@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>編集タブの使い方 - PromptGenerator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/hirsaeki/PromptGenerator-for-NovelAI/main/PromptGeneratorPlus/assets/icon/Icon128.png">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="nav-container">
+                <div class="nav-left">
+                    <h1>✏️ 編集タブの使い方</h1>
+                </div>
+                <div class="nav-right">
+                    <a href="index.html" class="nav-link">← ガイド目次に戻る</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="tutorial-wrapper">
+            <!-- 概要 -->
+            <section class="content-section">
+                <h2>🎯 編集タブとは</h2>
+                <p>
+                    編集タブは、検索タブで集めたプロンプト要素を整理・調整し、
+                    最終的な完成形に仕上げるための中心的な機能です。
+                </p>
+                <p>
+                    <strong>主要機能</strong>：
+                </p>
+                <ul>
+                    <li><strong>ドラッグ&ドロップ並び替え</strong> - 要素の優先順位を調整</li>
+                    <li><strong>重み値調整</strong> - 各要素の影響度を細かく制御</li>
+                    <li><strong>自動翻訳</strong> - 日本語⇔英語の双方向翻訳</li>
+                    <li><strong>2つの編集モード</strong> - 用途に応じた柔軟な編集</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 編集タブの位置づけ</strong><br>
+                    検索タブで「材料」を集め、編集タブで「調理」し、スロットタブで「保存」する、
+                    というワークフローの中心となる重要な機能です。
+                </div>
+            </section>
+
+            <!-- 編集モードの使い分け -->
+            <section class="content-section">
+                <h2>🔄 編集モードの使い分け</h2>
+                
+                <h3>選択編集モード（推奨）</h3>
+                <p><strong>特徴：</strong> カテゴリと要素をドロップダウンから選択</p>
+                <ul>
+                    <li>✅ <strong>安全性が高い</strong> - タイポや表記ミスを防止</li>
+                    <li>✅ <strong>一貫性を保持</strong> - マスターデータに準拠</li>
+                    <li>✅ <strong>初心者にやさしい</strong> - 選択肢から選ぶだけ</li>
+                    <li>✅ <strong>翻訳品質が安定</strong> - 既知の要素で高精度</li>
+                </ul>
+                
+                <div class="tip-box success">
+                    <strong>✅ こんな時に選択編集モード</strong>
+                    <ul>
+                        <li>マスターデータの範囲内で調整したい</li>
+                        <li>安定した翻訳品質を求める</li>
+                        <li>初心者で操作に慣れていない</li>
+                        <li>プロンプトの完成度を重視する</li>
+                    </ul>
+                </div>
+
+                <h3>テキスト編集モード（上級者向け）</h3>
+                <p><strong>特徴：</strong> プロンプト内容を直接テキスト入力</p>
+                <ul>
+                    <li>🎨 <strong>完全な自由度</strong> - オリジナル要素を追加可能</li>
+                    <li>🚀 <strong>高速編集</strong> - 直接入力で効率的</li>
+                    <li>🔧 <strong>細かい調整</strong> - ニュアンスの微調整が可能</li>
+                    <li>⚠️ <strong>翻訳精度にばらつき</strong> - 未知の表現は翻訳困難</li>
+                </ul>
+
+                <div class="tip-box warning">
+                    <strong>⚠ こんな時にテキスト編集モード</strong>
+                    <ul>
+                        <li>オリジナルの創作要素を加えたい</li>
+                        <li>特殊な表現や固有名詞を使用したい</li>
+                        <li>他のAIツールからプロンプトをインポート</li>
+                        <li>編集操作に慣れている上級者</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 要素操作機能 -->
+            <section class="content-section">
+                <h2>🔧 要素操作機能</h2>
+                
+                <h3>要素の追加</h3>
+                <ul>
+                    <li><strong>上に追加</strong> - リストの一番上に新しい空の要素を追加</li>
+                    <li><strong>下に追加</strong> - リストの一番下に新しい空の要素を追加</li>
+                </ul>
+                
+                <h3>プロンプト分割機能</h3>
+                <p>
+                    要素が1つだけの状態で「分割」ボタンが表示され、
+                    スペース区切りで複数の要素に分割できます。
+                </p>
+                
+                <h4>分割機能の使い方</h4>
+                <ol>
+                    <li><strong>単一要素の状態</strong> - 要素が1つだけの時に分割ボタンが表示</li>
+                    <li><strong>分割ボタンをクリック</strong> - スペース区切りで自動分割</li>
+                    <li><strong>個別編集可能</strong> - 分割後の各要素は独立して編集可能</li>
+                </ol>
+                
+                <div class="tip-box">
+                    <strong>💡 分割機能の活用シーン</strong><br>
+                    他のツールから長いプロンプトをコピーしてきた時に、
+                    個別要素に分割して細かく調整することができます。
+                </div>
+                
+                <h3>🚀 スクロール位置保持最適化</h3>
+                <p>
+                    編集タブには<strong>EditElementManager</strong>による最適化が実装されており、
+                    以下の操作でもスクロール位置が完全に保持されます：
+                </p>
+                <ul>
+                    <li><strong>要素の追加・削除</strong> - 編集位置を見失わない</li>
+                    <li><strong>モード切り替え</strong> - 選択編集⇔テキスト編集</li>
+                    <li><strong>カテゴリ変更</strong> - ドロップダウン選択時</li>
+                    <li><strong>並び替え操作</strong> - ドラッグ&ドロップ後</li>
+                </ul>
+                
+                <div class="tip-box success">
+                    <strong>✅ 編集の快適性向上</strong><br>
+                    長いプロンプトリストでも、作業中の位置を見失うことなく、
+                    ストレスなく編集作業を続けることができます。
+                </div>
+            </section>
+
+            <!-- ドラッグ&ドロップ並び替え -->
+            <section class="content-section">
+                <h2>🔄 ドラッグ&ドロップ並び替え</h2>
+
+                <h3>基本操作</h3>
+                <ol>
+                    <li><strong>要素をマウスでクリック&ホールド</strong></li>
+                    <li><strong>目的の位置までドラッグ</strong></li>
+                    <li><strong>マウスボタンを離してドロップ</strong></li>
+                </ol>
+
+                <h3>並び順の重要性</h3>
+                <p>プロンプトの要素順序は生成される画像に大きく影響します：</p>
+                
+                <h4>🥇 最優先（1-3番目）</h4>
+                <ul>
+                    <li><strong>メインキャラクター</strong> - 「美少女」「アニメガール」など</li>
+                    <li><strong>画風・品質指定</strong> - 「高品質」「masterpiece」など</li>
+                    <li><strong>基本構成</strong> - 「1girl」「portrait」など</li>
+                </ul>
+
+                <h4>🥈 高優先（4-8番目）</h4>
+                <ul>
+                    <li><strong>外見の特徴</strong> - 髪型、目、表情など</li>
+                    <li><strong>服装・アクセサリー</strong> - 制服、ドレス、装身具など</li>
+                    <li><strong>ポーズ・動作</strong> - 立つ、座る、手を振るなど</li>
+                </ul>
+
+                <h4>🥉 中優先（9-15番目）</h4>
+                <ul>
+                    <li><strong>背景・環境</strong> - 教室、公園、街並みなど</li>
+                    <li><strong>時間・天候</strong> - 朝、夕方、雨、雪など</li>
+                    <li><strong>補助的な要素</strong> - 小物、効果など</li>
+                </ul>
+
+                <h4>🏅 低優先（16番目以降）</h4>
+                <ul>
+                    <li><strong>技術的パラメータ</strong> - 解像度、レンダリング指定</li>
+                    <li><strong>細部の装飾</strong> - 微細な模様、テクスチャなど</li>
+                    <li><strong>否定要素（後で設定）</strong> - 不要な要素の除外</li>
+                </ul>
+
+                <div class="tip-box">
+                    <strong>💡 並び替えのコツ</strong><br>
+                    迷った時は「この要素がなかったら画像は成立するか？」を考えてみてください。
+                    必須要素ほど上位に、装飾的要素ほど下位に配置します。
+                </div>
+            </section>
+
+            <!-- 重み値調整 -->
+            <section class="content-section">
+                <h2>⚖️ 重み値調整の活用</h2>
+
+                <h3>重み値とは</h3>
+                <p>
+                    重み値は、各プロンプト要素が画像生成に与える影響の強さを数値で表現したものです。
+                    <strong>0.1〜2.0</strong>の範囲で調整できます。
+                </p>
+
+                <h3>📊 重み値の目安</h3>
+                
+                <h4>🔥 強調したい場合（1.1-1.5）</h4>
+                <ul>
+                    <li><strong>メインキャラクター</strong> - 1.2-1.4</li>
+                    <li><strong>重要な特徴</strong> - 特殊な髪色、印象的な目など</li>
+                    <li><strong>画風指定</strong> - アニメ調、写実的など</li>
+                </ul>
+                <p><strong>効果：</strong> その要素がより強く表現されます</p>
+
+                <h4>🎯 標準的な場合（0.8-1.0）</h4>
+                <ul>
+                    <li><strong>一般的な外見要素</strong> - 標準的な髪型、服装など</li>
+                    <li><strong>背景要素</strong> - 教室、公園などの一般的な背景</li>
+                    <li><strong>標準的なポーズ</strong> - 立つ、座るなどの基本動作</li>
+                </ul>
+                <p><strong>効果：</strong> バランスよく表現されます</p>
+
+                <h4>🔇 控えめにしたい場合（0.5-0.7）</h4>
+                <ul>
+                    <li><strong>補助的な装飾</strong> - 小さなアクセサリー、背景の小物</li>
+                    <li><strong>雰囲気要素</strong> - 光の効果、質感の指定</li>
+                    <li><strong>微調整要素</strong> - 細かい色味、影の表現など</li>
+                </ul>
+                <p><strong>効果：</strong> ほのかに効果を発揮します</p>
+
+                <h3>🎨 実践的な重み値調整例</h3>
+
+                <h4>例1: 髪色を強調したい場合</h4>
+                <pre><code>美少女 (1.2)
+銀髪 (1.4)  ← 特徴的な髪色を強調
+ロングヘア (0.9)
+大きな瞳 (0.8)</code></pre>
+
+                <h4>例2: 背景を控えめにしたい場合</h4>
+                <pre><code>美少女 (1.3)
+学校制服 (1.0)
+立ちポーズ (0.9)
+教室 (0.6)  ← 背景を控えめに</code></pre>
+
+                <h4>例3: 全体的に強い印象にしたい場合</h4>
+                <pre><code>美少女 (1.4)
+ツインテール (1.2)
+元気な表情 (1.1)
+明るい色彩 (1.0)</code></pre>
+
+                <div class="tip-box success">
+                    <strong>✅ 重み値調整のベストプラクティス</strong>
+                    <ul>
+                        <li>最初は全て1.0からスタート</li>
+                        <li>一度に1つの要素だけ調整</li>
+                        <li>0.1刻みで少しずつ変更</li>
+                        <li>Generate結果を見ながら微調整</li>
+                        <li>極端な値（0.3以下、1.8以上）は避ける</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 翻訳機能 -->
+            <section class="content-section">
+                <h2>🌐 自動翻訳機能の活用</h2>
+
+                <h3>翻訳機能の基本</h3>
+                <p>
+                    PromptGeneratorの翻訳機能は、プロンプト入力時に自動的に実行される
+                    <strong>自動翻訳システム</strong>です。
+                </p>
+
+                <h3>🔄 翻訳の動作フロー</h3>
+                <ol>
+                    <li><strong>プロンプト入力時</strong> - 日本語・英語問わず入力</li>
+                    <li><strong>自動カテゴリ検索</strong> - システムがマスターデータで逆検索</li>
+                    <li><strong>カテゴリが見つからない場合</strong> - 自動的に翻訳処理開始</li>
+                    <li><strong>翻訳結果反映</strong> - 自動的に適切な言語に変換</li>
+                </ol>
+
+                <h3>📚 翻訳品質の特徴</h3>
+
+                <h4>✅ 高精度な翻訳が期待できる要素</h4>
+                <ul>
+                    <li><strong>マスターデータ由来</strong> - 既知の要素は100%正確</li>
+                    <li><strong>一般的な外見表現</strong> - 髪型、服装、表情など</li>
+                    <li><strong>基本的な背景・環境</strong> - 学校、公園、自然など</li>
+                    <li><strong>標準的なポーズ</strong> - 立つ、座る、歩くなど</li>
+                </ul>
+
+                <h4>⚠️ 翻訳が困難な要素</h4>
+                <ul>
+                    <li><strong>固有名詞</strong> - アニメキャラ名、ブランド名など</li>
+                    <li><strong>造語・スラング</strong> - ネット用語、創作用語など</li>
+                    <li><strong>複雑な文章</strong> - 長い説明文、複合的な表現</li>
+                    <li><strong>文脈依存表現</strong> - 状況に依存する曖昧な表現</li>
+                </ul>
+
+                <h3>🎯 翻訳品質を上げるコツ</h3>
+
+                <h4>1. 要素を分割して翻訳</h4>
+                <div class="tip-box">
+                    <strong>❌ 悪い例:</strong> 「青い髪の美少女が笑顔で立っている」<br>
+                    <strong>✅ 良い例:</strong> 「美少女」「青い髪」「笑顔」「立ちポーズ」
+                </div>
+
+                <h4>2. 標準的な表現を使用</h4>
+                <div class="tip-box">
+                    <strong>❌ 避ける:</strong> 「超可愛い」「めっちゃ綺麗」<br>
+                    <strong>✅ 推奨:</strong> 「可愛い」「美しい」「きれい」
+                </div>
+
+                <h4>3. 既知の要素を優先</h4>
+                <p>マスターデータにある表現を使うことで、翻訳精度が格段に向上します。</p>
+
+                <h3>🔧 翻訳後の確認ポイント</h3>
+                <ul>
+                    <li><strong>意味の一致</strong> - 元の日本語と英語が同じ意味か</li>
+                    <li><strong>AI生成向け表現</strong> - プロンプト用の適切な英語か</li>
+                    <li><strong>重複の除去</strong> - 同じ意味の表現が重複していないか</li>
+                    <li><strong>文法の自然さ</strong> - 英語として自然な表現か</li>
+                </ul>
+
+                <div class="tip-box warning">
+                    <strong>⚠ 翻訳時の注意事項</strong><br>
+                    翻訳は100%完璧ではありません。重要なプロンプトでは翻訳結果を必ず確認し、
+                    必要に応じて手動で修正してください。
+                </div>
+            </section>
+
+            <!-- 要素の追加・削除 -->
+            <section class="content-section">
+                <h2>➕ 要素の追加・削除・複製</h2>
+
+                <h3>新しい要素の追加</h3>
+                <ul>
+                    <li><strong>「上に追加」ボタン</strong> - リストの先頭に高優先度要素を追加</li>
+                    <li><strong>「下に追加」ボタン</strong> - リストの末尾に補助要素を追加</li>
+                    <li><strong>検索タブから追加</strong> - 検索結果の「追加」ボタン</li>
+                </ul>
+
+                <h3>要素の削除</h3>
+                <ul>
+                    <li><strong>個別削除</strong> - 各要素の「🗑️」ボタン</li>
+                    <li><strong>キーボードショートカット</strong> - Ctrl+D で選択要素を削除</li>
+                    <li><strong>一括削除</strong> - 「すべてクリア」ボタンで全削除</li>
+                </ul>
+
+                <h3>要素の複製・応用</h3>
+                <p>同じ系統の要素で重み値だけ変えたい場合の効率的な方法：</p>
+                <ol>
+                    <li>元の要素をコピー（テキスト選択してCtrl+C）</li>
+                    <li>新しい要素を追加</li>
+                    <li>内容をペースト（Ctrl+V）</li>
+                    <li>重み値のみ調整</li>
+                </ol>
+
+                <div class="tip-box">
+                    <strong>💡 効率的な編集のワークフロー</strong>
+                    <ol>
+                        <li>検索タブで基本要素を収集</li>
+                        <li>編集タブで並び順を調整</li>
+                        <li>重み値で強弱をつける</li>
+                        <li>翻訳で英語化</li>
+                        <li>Generate前に最終確認</li>
+                    </ol>
+                </div>
+            </section>
+
+            <!-- 実践的な編集例 -->
+            <section class="content-section">
+                <h2>🎨 実践的な編集例</h2>
+
+                <h3>例1: 美少女ポートレートの編集手順</h3>
+                
+                <h4>ステップ1: 基本構成</h4>
+                <pre><code>1. 美少女 (1.3)          ← メインキャラクター
+2. high quality (1.1)   ← 品質指定
+3. masterpiece (1.0)    ← 完成度指定</code></pre>
+
+                <h4>ステップ2: 外見要素追加</h4>
+                <pre><code>4. ロングヘア (0.9)      ← 髪型
+5. 青い瞳 (1.1)         ← 特徴的な目の色
+6. 学校制服 (0.8)       ← 服装</code></pre>
+
+                <h4>ステップ3: ポーズ・表情</h4>
+                <pre><code>7. 微笑み (0.9)         ← 表情
+8. 正面向き (0.7)       ← ポーズ</code></pre>
+
+                <h4>ステップ4: 背景・環境</h4>
+                <pre><code>9. 教室 (0.6)           ← 背景（控えめ）
+10. 自然光 (0.5)        ← 照明効果</code></pre>
+
+                <h3>例2: ファンタジーシーンの編集</h3>
+                
+                <h4>重点：世界観とキャラクターのバランス</h4>
+                <pre><code>1. エルフ (1.4)         ← メインキャラ（強調）
+2. 魔法使い (1.2)       ← 職業・役割
+3. 長い耳 (1.0)         ← 種族特徴
+4. 魔法の杖 (0.9)       ← 重要なアイテム
+5. 古代の森 (1.1)       ← 世界観を表す背景
+6. 魔法陣 (0.8)         ← 神秘的な演出
+7. 夕暮れ (0.6)         ← 時間の演出</code></pre>
+
+                <h3>例3: 現代風カジュアルシーン</h3>
+                
+                <h4>重点：自然な日常感の表現</h4>
+                <pre><code>1. 女の子 (1.2)         ← 親しみやすいキャラ
+2. カジュアル服 (1.0)   ← 現代的な服装
+3. ショートヘア (0.8)   ← 活発な印象の髪型
+4. 笑顔 (1.1)           ← 明るい表情（強調）
+5. カフェ (0.7)         ← 日常的な背景
+6. 温かい照明 (0.5)     ← 雰囲気作り</code></pre>
+
+                <div class="tip-box success">
+                    <strong>✅ 編集の上達ポイント</strong>
+                    <ul>
+                        <li>最初は要素数を10個以下に抑える</li>
+                        <li>1つのテーマに統一感を持たせる</li>
+                        <li>重み値の差は0.3以内に収める</li>
+                        <li>Generate結果を見て調整を繰り返す</li>
+                        <li>うまくいった組み合わせはスロットに保存</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 妖精のアドバイス -->
+            <section class="fairy-message">
+                <div class="message-content">
+                    <div class="fairy-character">
+                        <span class="fairy-icon">🧚‍♀️</span>
+                        <span class="fairy-name">ココアちゃん</span>
+                    </div>
+                    <div class="message-text">
+                        <p>
+                            編集タブは奥が深いですが、基本は「並び順」と「重み値」の2つだけです、なのです！<br>
+                            最初は控えめな値から始めて、Generate結果を見ながら少しずつ調整していけば、
+                            きっと理想的なプロンプトが作れますよ〜✨<br>
+                            翻訳機能も使いこなして、素敵な作品を作ってくださいね！
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ページナビゲーション -->
+            <nav class="page-nav">
+                <a href="search.html" class="nav-btn">← 検索タブの使い方</a>
+                <span>次はオリジナル辞書で要素を管理しましょう</span>
+                <a href="dictionary.html" class="nav-btn">辞書タブの使い方 →</a>
+            </nav>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <p>© 2024 PromptGenerator. Created with 💜 by hirsaeki</p>
+                <p><a href="index.html">← ガイド目次に戻る</a> | <a href="../index.html">配布ページ</a></p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
