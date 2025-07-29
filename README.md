@@ -1,2 +1,2 @@
 # PromptGeneratorPage
-PromptGeneratorを配ります
+PromptGeneratorを配るページです
