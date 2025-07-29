@@ -47,6 +47,79 @@
                 </div>
             </section>
 
+            <!-- スロット統合機能 -->
+            <section class="content-section">
+                <h2>🎯 スロット統合機能 ⭐ 新機能</h2>
+                <p>
+                    編集タブには、<strong>スロット機能が完全統合</strong>されており、
+                    編集タブ内で直接スロットモード・重み・データソースの設定が可能です。
+                </p>
+                
+                <h3>🎛️ スロットモードの種類</h3>
+                <p>編集タブ上部の「スロットモード」ドロップダウンから選択できます：</p>
+                
+                <h4>1. 通常モード（normal）</h4>
+                <ul>
+                    <li>✅ <strong>複数要素表示</strong> - 要素ごとに個別編集可能</li>
+                    <li>✅ <strong>重み調整対応</strong> - 各要素の重み値を個別調整</li>
+                    <li>✅ <strong>Generate時結合</strong> - カンマ区切りで出力</li>
+                </ul>
+                
+                <h4>2. 単一モード（single）</h4>
+                <ul>
+                    <li>📝 <strong>まとまったテキスト</strong> - 単一のプロンプトとして編集</li>
+                    <li>⚡ <strong>Generate時出力</strong> - スペース区切りで出力</li>
+                </ul>
+                
+                <h4>3. ランダム抽出モード（random）</h4>
+                <ul>
+                    <li>🎲 <strong>毎回異なる結果</strong> - Generate実行時にランダム抽出</li>
+                    <li>👁️ <strong>読み取り専用表示</strong> - 抽出モード表示に切り替え</li>
+                    <li>🎯 <strong>データソース設定</strong> - 辞書・お気に入りから抽出対象選択</li>
+                </ul>
+                
+                <h4>4. 連続抽出モード（sequential）</h4>
+                <ul>
+                    <li>📋 <strong>順序性のある抽出</strong> - 要素を順次抽出</li>
+                    <li>👁️ <strong>読み取り専用表示</strong> - 抽出モード表示に切り替え</li>
+                    <li>🔢 <strong>系統的な生成</strong> - 順序立ったプロンプト生成</li>
+                </ul>
+
+                <h3>⚖️ スロット重み調整</h3>
+                <p>編集タブ上部の「スロット重み」で、スロット全体の重み値を調整できます：</p>
+                <ul>
+                    <li><strong>NAIモード</strong>: 1刻みで調整（0, ±1, ±2...）</li>
+                    <li><strong>SDモード</strong>: 0.1刻みで調整（1.0, 1.1, 1.2...）</li>
+                    <li><strong>ホイール操作対応</strong>: マウスホイールで直感的調整</li>
+                    <li><strong>+/-ボタン</strong>: クリックで段階的調整</li>
+                </ul>
+
+                <h3>📊 データソース設定（抽出モード時）</h3>
+                <p>ランダム・連続抽出モード時に、抽出元を指定できます：</p>
+                
+                <h4>辞書モード</h4>
+                <ul>
+                    <li><strong>大項目・中項目選択</strong> - マスターデータから抽出対象を絞り込み</li>
+                    <li><strong>動的カテゴリ更新</strong> - 大項目選択で中項目が自動更新</li>
+                </ul>
+                
+                <h4>お気に入りモード</h4>
+                <ul>
+                    <li><strong>お気に入り辞書選択</strong> - 保存済みの辞書から抽出</li>
+                    <li><strong>カスタムデータ活用</strong> - ユーザー独自の要素群を活用</li>
+                </ul>
+
+                <div class="tip-box success">
+                    <strong>✅ スロット統合機能のメリット</strong>
+                    <ul>
+                        <li><strong>ワンストップ操作</strong> - タブ切り替え不要で全設定完了</li>
+                        <li><strong>リアルタイム確認</strong> - 設定変更の結果を即座に確認</li>
+                        <li><strong>効率的なワークフロー</strong> - 編集→設定→Generate を素早く実行</li>
+                        <li><strong>スロットタブと完全連動</strong> - 設定はスロットタブにも反映</li>
+                    </ul>
+                </div>
+            </section>
+
             <!-- 編集モードの使い分け -->
             <section class="content-section">
                 <h2>🔄 編集モードの使い分け</h2>
