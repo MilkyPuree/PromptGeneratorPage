@@ -33,6 +33,7 @@
     --info-color: #3b82f6;
     
     /* 難易度色 */
+    --super-beginner-color: #22c55e;
     --beginner-color: #10b981;
     --intermediate-color: #f59e0b;
     --advanced-color: #ef4444;
@@ -276,6 +277,11 @@ main {
     font-size: 0.8rem;
     font-weight: 600;
     text-transform: uppercase;
+}
+
+.difficulty.super-beginner {
+    background: var(--super-beginner-color);
+    color: white;
 }
 
 .difficulty.beginner {
