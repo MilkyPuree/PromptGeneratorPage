@@ -10,6 +10,7 @@ import sys
 import zipfile
 import shutil
 import json
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -102,6 +103,124 @@ def get_version_from_manifest(project_root):
             return manifest.get('version', '1.0.0')
     except Exception:
         return '1.0.0'
+
+def sync_to_github_folder(project_root, script_dir):
+    """プロジェクトファイルを配布ページのGitHubフォルダに同期"""
+    github_folder = os.path.join(script_dir, 'GitHub')
+    
+    print(f"GitHubフォルダに同期中: {github_folder}")
+    print("-" * 50)
+    
+    sync_count = 0
+    
+    # プロジェクトルートを走査
+    for root, dirs, files in os.walk(project_root):
+        # .gitなどの隠しディレクトリをスキップ
+        dirs[:] = [d for d in dirs if not d.startswith('.')]
+        
+        for file in files:
+            file_path = os.path.join(root, file)
+            
+            # 隠しファイルをスキップ
+            if file.startswith('.'):
+                continue
+            
+            # 包含判定（zipと同じ条件を使用）
+            if should_include_file(file_path, project_root):
+                relative_path = os.path.relpath(file_path, project_root)
+                dest_path = os.path.join(github_folder, relative_path)
+                
+                # 目的ディレクトリが存在しない場合は作成
+                dest_dir = os.path.dirname(dest_path)
+                os.makedirs(dest_dir, exist_ok=True)
+                
+                # ファイルをコピー（タイムスタンプも維持）
+                try:
+                    shutil.copy2(file_path, dest_path)
+                    print(f"同期: {relative_path}")
+                    sync_count += 1
+                except Exception as e:
+                    print(f"同期エラー ({relative_path}): {e}")
+    
+    print("-" * 50)
+    print(f"GitHubフォルダ同期完了: {sync_count}件")
+    
+    return sync_count
+
+def git_commit_and_push(github_folder, version):
+    """GitHubフォルダで自動コミット・プッシュを実行"""
+    try:
+        # GitHubフォルダに移動
+        original_cwd = os.getcwd()
+        os.chdir(github_folder)
+        
+        print(f"Git操作を実行中: {github_folder}")
+        print("-" * 50)
+        
+        # git statusで変更状況を確認
+        result = subprocess.run(['git', 'status', '--porcelain'], 
+                              capture_output=True, text=True, encoding='utf-8', 
+                              errors='replace')
+        
+        if result.returncode != 0:
+            print(f"git status エラー: {result.stderr}")
+            return False
+        
+        # 変更がない場合は何もしない
+        if not result.stdout.strip():
+            print("変更なし: コミット・プッシュをスキップ")
+            return True
+        
+        print("変更されたファイル:")
+        for line in result.stdout.strip().split('\n'):
+            if line.strip():
+                print(f"  {line}")
+        
+        # すべての変更をステージング
+        result = subprocess.run(['git', 'add', '.'], 
+                              capture_output=True, text=True, encoding='utf-8',
+                              errors='replace')
+        
+        if result.returncode != 0:
+            print(f"git add エラー: {result.stderr}")
+            return False
+        
+        print("変更をステージング完了")
+        
+        # コミット実行（日本語メッセージ）
+        commit_message = f"更新 v{version} - 配布用ファイル自動同期"
+        result = subprocess.run(['git', 'commit', '-m', commit_message], 
+                              capture_output=True, text=True, encoding='utf-8',
+                              errors='replace')
+        
+        if result.returncode != 0:
+            print(f"git commit エラー: {result.stderr}")
+            return False
+        
+        print(f"コミット完了: {commit_message}")
+        
+        # プッシュ実行
+        result = subprocess.run(['git', 'push', 'origin', 'master'], 
+                              capture_output=True, text=True, encoding='utf-8',
+                              errors='replace')
+        
+        if result.returncode != 0:
+            print(f"git push エラー: {result.stderr}")
+            return False
+        
+        print("プッシュ完了: origin/master")
+        print("-" * 50)
+        print("Git操作が正常に完了しました！")
+        
+        return True
+        
+    except Exception as e:
+        print(f"Git操作エラー: {e}")
+        return False
+    
+    finally:
+        # 元のディレクトリに戻る
+        os.chdir(original_cwd)
 
 def create_distribution_zip(project_root, output_dir):
     """配布用zipファイルを作成"""
@@ -293,14 +412,27 @@ def main():
     print()
     
     try:
+        # バージョン情報を取得
+        version = get_version_from_manifest(project_root)
+        
+        # GitHubフォルダにファイル同期
+        sync_count = sync_to_github_folder(project_root, script_dir)
+        print()
+        
         # 配布用zipファイル作成
         basic_zip_path, basic_zip_filename, history_zip_path, history_zip_filename = create_distribution_zip(project_root, output_dir)
         
         # 配布ページの更新（基本ファイル名を使用）
         update_download_page(output_dir, basic_zip_filename)
         
+        # GitHubフォルダでgit操作実行
+        github_folder = os.path.join(script_dir, 'GitHub')
+        git_success = git_commit_and_push(github_folder, version)
+        
         print()
         print("配布用zipファイルの生成が完了しました！")
+        print(f"GitHubフォルダ同期: {sync_count}件")
+        print(f"Git操作: {'成功' if git_success else '失敗'}")
         
     except Exception as e:
         print(f"エラーが発生しました: {e}")
