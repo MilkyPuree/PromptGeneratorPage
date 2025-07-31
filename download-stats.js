@@ -6,7 +6,7 @@
 class DownloadStatsManager {
   constructor() {
     // GASのWebアプリURLを設定してください（デプロイ後に更新）
-    this.apiUrl = "https://script.google.com/macros/s/AKfycbyqx_WyA1MZb2AGpID8LaqEuPOPmWJueCkbrw2Z_v9k4iRged9DpxFF-Tgrh1xFTDORvA/exec";
+    this.apiUrl = "https://script.google.com/macros/s/AKfycbxOtER366h41V5syluNoMKfhRglF0tg0vDn5y-Kma8IBJ439f_Uc-81jshTSiFPeqQB3A/exec";
     this.version = "1.0.0"; // 拡張機能のバージョン
   }
 
@@ -16,8 +16,11 @@ class DownloadStatsManager {
    */
   async recordDownload(event = null) {
     try {
-      // ユーザーエージェント情報を取得
-      const userAgent = navigator.userAgent;
+      // ユーザーエージェント情報を取得（文字数制限）
+      const fullUserAgent = navigator.userAgent;
+      const userAgent = fullUserAgent.length > 100 
+        ? fullUserAgent.substring(0, 100) + '...' 
+        : fullUserAgent;
       
       // パラメータを構築
       const params = new URLSearchParams({
@@ -118,6 +121,14 @@ const downloadStats = new DownloadStatsManager();
 
 // DOM読み込み完了後に自動初期化
 document.addEventListener('DOMContentLoaded', () => {
+  // 重複防止のため、既にイベントリスナーが設定済みかチェック
+  if (downloadStats._initialized) {
+    console.log('📊 Download stats already initialized, skipping...');
+    return;
+  }
+  
+  downloadStats._initialized = true;
+  
   // 配布ページ専用：動的に生成されるダウンロードボタンを監視
   const observer = new MutationObserver(() => {
     // ダウンロードボタンが動的に生成された後にアタッチ
@@ -125,11 +136,22 @@ document.addEventListener('DOMContentLoaded', () => {
     downloadButtons.forEach((button, index) => {
       // 既にリスナーが追加されていないかチェック
       if (!button.hasAttribute('data-stats-attached')) {
-        button.addEventListener('click', (event) => {
+        // クリック防止用のラッパー関数
+        const handleDownloadClick = (event) => {
+          // 重複クリック防止（短時間内の連続クリックを防ぐ）
+          if (button._lastClickTime && Date.now() - button._lastClickTime < 1000) {
+            console.log('📊 Duplicate click prevented');
+            return;
+          }
+          button._lastClickTime = Date.now();
+          
           downloadStats.recordDownload(event);
-          console.log(`📦 Distribution download ${index + 1} initiated`);
-        });
+          console.log(`📦 Distribution download recorded: ${button.download || button.href}`);
+        };
+        
+        button.addEventListener('click', handleDownloadClick);
         button.setAttribute('data-stats-attached', 'true');
+        console.log(`✅ Stats attached to button: ${button.download || button.href}`);
       }
     });
   });
@@ -139,9 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
   if (downloadContainer) {
     observer.observe(downloadContainer, { childList: true, subtree: true });
   }
-
-  // 既存のダウンロードボタンにもアタッチ
-  downloadStats.attachToAllDownloadButtons('a[href="#download"], .btn-primary[href="#download"]');
 });
 
 // 手動使用のためのグローバル公開
