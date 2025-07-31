@@ -208,6 +208,15 @@ class SimpleDistributionManager {
             <span>${isLatest ? '最新版をダウンロード' : 'バージョン'}: ${file.name}</span>
         `;
 
+        // ダウンロード統計の記録
+        button.addEventListener('click', (event) => {
+            // ダウンロード統計が利用可能な場合のみ記録
+            if (window.downloadStats) {
+                window.downloadStats.recordDownload(event);
+                console.log(`📊 Download stats recorded for: ${file.name}`);
+            }
+        });
+
         const infoDiv = document.createElement('div');
         infoDiv.style.cssText = `
             margin-top: 0.5rem;
