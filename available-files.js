@@ -4,8 +4,26 @@ window.availableFiles = {
     {
       "name": "PromptGenerator.zip",
       "url": "downloads/PromptGenerator.zip",
-      "size": 753874,
-      "lastModified": "2025-08-01T04:54:59.237190"
+      "size": 753577,
+      "lastModified": "2025-08-01T05:04:17.315969"
+    },
+    {
+      "name": "PromptGenerator_v1.0.0_20250801_050417.zip",
+      "url": "downloads/PromptGenerator_v1.0.0_20250801_050417.zip",
+      "size": 753577,
+      "lastModified": "2025-08-01T05:04:17.315969"
+    },
+    {
+      "name": "PromptGenerator_v1.0.0_20250801_050256.zip",
+      "url": "downloads/PromptGenerator_v1.0.0_20250801_050256.zip",
+      "size": 753577,
+      "lastModified": "2025-08-01T05:02:57.001226"
+    },
+    {
+      "name": "PromptGenerator_v1.0.0_20250801_050200.zip",
+      "url": "downloads/PromptGenerator_v1.0.0_20250801_050200.zip",
+      "size": 753577,
+      "lastModified": "2025-08-01T05:02:00.258838"
     },
     {
       "name": "PromptGenerator_v1.0.0_20250801_045458.zip",
@@ -38,6 +56,6 @@ window.availableFiles = {
       "lastModified": "2025-07-31T22:25:54.870310"
     }
   ],
-  "updated": "2025-08-01T04:54:59.242851",
-  "count": 6
+  "updated": "2025-08-01T05:04:17.321995",
+  "count": 9
 };

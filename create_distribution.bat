@@ -27,6 +27,55 @@ if %errorlevel% equ 0 (
     echo 3. Chrome拡張機能管理画面で「パッケージ化されていない拡張機能を読み込む」
     echo 4. 展開したフォルダを選択
     echo.
+    
+    rem 自動コミット・プッシュ処理
+    echo ============================================
+    echo Git自動コミット・プッシュを実行します
+    echo ============================================
+    echo.
+    
+    rem プロジェクトルートに移動
+    cd /d "%PROJECT_ROOT%"
+    
+    rem git add
+    echo git add を実行中...
+    git add .
+    
+    rem 日時を取得してコミットメッセージを作成
+    for /f "tokens=1-3 delims=/-. " %%a in ('date /t') do set TODAY=%%a/%%b/%%c
+    for /f "tokens=1-2 delims=:. " %%a in ('time /t') do set NOW=%%a:%%b
+    set COMMIT_MSG=配布ビルド作成とドキュメント更新 %TODAY% %NOW%
+    
+    rem git commit
+    echo.
+    echo git commit を実行中...
+    git commit -m "%COMMIT_MSG%"
+    
+    rem コミット成功時のみプッシュ
+    if %errorlevel% equ 0 (
+        echo.
+        echo git push を実行中...
+        git push
+        
+        if %errorlevel% equ 0 (
+            echo.
+            echo ============================================
+            echo コミット・プッシュが完了しました！
+            echo コミットメッセージ: %COMMIT_MSG%
+            echo ============================================
+        ) else (
+            echo.
+            echo プッシュに失敗しました。
+            echo ネットワーク接続を確認してください。
+        )
+    ) else (
+        echo.
+        echo コミットする変更がないか、コミットに失敗しました。
+    )
+    
+    rem 元のディレクトリに戻る
+    cd /d "%SCRIPT_DIR%"
+    
 ) else (
     echo.
     echo エラーが発生しました。
