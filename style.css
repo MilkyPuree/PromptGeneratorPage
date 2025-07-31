@@ -163,6 +163,25 @@ body {
     gap: var(--spacing-lg);
 }
 
+/* ロゴアイコンスタイル */
+.logo-with-icon {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+.logo-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+}
+
+.logo-icon:hover {
+    transform: scale(1.05);
+}
+
 .logo h1 {
     font-size: var(--font-size-3xl);
     font-weight: 700;
