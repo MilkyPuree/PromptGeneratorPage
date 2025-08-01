@@ -273,6 +273,17 @@ def commit_distribution_page_changes(script_dir, version):
             return False
         
         print(f"配布ページリポジトリコミット完了: {commit_message}")
+        
+        # プッシュ実行
+        result = subprocess.run(['git', 'push', 'origin', 'main'], 
+                              capture_output=True, text=True, encoding='utf-8',
+                              errors='replace')
+        
+        if result.returncode != 0:
+            print(f"git push エラー: {result.stderr}")
+            return False
+        
+        print("配布ページリポジトリプッシュ完了: origin/main")
         print("-" * 50)
         print("配布ページリポジトリGit操作が正常に完了しました！")
         
