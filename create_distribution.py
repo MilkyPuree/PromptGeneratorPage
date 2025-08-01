@@ -222,6 +222,70 @@ def git_commit_and_push(github_folder, version):
         # 元のディレクトリに戻る
         os.chdir(original_cwd)
 
+def commit_distribution_page_changes(script_dir, version):
+    """配布ページリポジトリの変更をコミット"""
+    try:
+        # 配布ページフォルダに移動
+        original_cwd = os.getcwd()
+        os.chdir(script_dir)
+        
+        print(f"配布ページリポジトリのGit操作を実行中: {script_dir}")
+        print("-" * 50)
+        
+        # git statusで変更状況を確認
+        result = subprocess.run(['git', 'status', '--porcelain'], 
+                              capture_output=True, text=True, encoding='utf-8', 
+                              errors='replace')
+        
+        if result.returncode != 0:
+            print(f"git status エラー: {result.stderr}")
+            return False
+        
+        # 変更がない場合は何もしない
+        if not result.stdout.strip():
+            print("配布ページに変更なし: コミットをスキップ")
+            return True
+        
+        print("配布ページの変更状況:")
+        for line in result.stdout.strip().split('\n'):
+            if line.strip():
+                print(f"  {line}")
+        
+        # すべての変更をステージング
+        result = subprocess.run(['git', 'add', '.'], 
+                              capture_output=True, text=True, encoding='utf-8',
+                              errors='replace')
+        
+        if result.returncode != 0:
+            print(f"git add エラー: {result.stderr}")
+            return False
+        
+        print("配布ページの変更をステージング完了")
+        
+        # コミット実行（日本語メッセージ）
+        commit_message = f"配布ファイル更新 v{version} - 自動配布システム実行"
+        result = subprocess.run(['git', 'commit', '-m', commit_message], 
+                              capture_output=True, text=True, encoding='utf-8',
+                              errors='replace')
+        
+        if result.returncode != 0:
+            print(f"git commit エラー: {result.stderr}")
+            return False
+        
+        print(f"配布ページリポジトリコミット完了: {commit_message}")
+        print("-" * 50)
+        print("配布ページリポジトリGit操作が正常に完了しました！")
+        
+        return True
+        
+    except Exception as e:
+        print(f"配布ページリポジトリGit操作エラー: {e}")
+        return False
+    
+    finally:
+        # 元のディレクトリに戻る
+        os.chdir(original_cwd)
+
 def create_distribution_zip(project_root, output_dir):
     """配布用zipファイルを作成"""
     
@@ -429,10 +493,14 @@ def main():
         github_folder = os.path.join(script_dir, 'GitHub')
         git_success = git_commit_and_push(github_folder, version)
         
+        # 配布ページリポジトリの変更をコミット
+        distribution_commit_success = commit_distribution_page_changes(script_dir, version)
+        
         print()
         print("配布用zipファイルの生成が完了しました！")
         print(f"GitHubフォルダ同期: {sync_count}件")
-        print(f"Git操作: {'成功' if git_success else '失敗'}")
+        print(f"GitHubフォルダGit操作: {'成功' if git_success else '失敗'}")
+        print(f"配布ページリポジトリGit操作: {'成功' if distribution_commit_success else '失敗'}")
         
     except Exception as e:
         print(f"エラーが発生しました: {e}")
