@@ -137,10 +137,16 @@ def sync_to_github_folder(project_root, script_dir):
                 # ファイルをコピー（タイムスタンプも維持）
                 try:
                     shutil.copy2(file_path, dest_path)
-                    print(f"同期: {relative_path}")
+                    try:
+                        print(f"同期: {relative_path}")
+                    except UnicodeEncodeError:
+                        print(f"同期: [ファイル名表示エラー]")
                     sync_count += 1
                 except Exception as e:
-                    print(f"同期エラー ({relative_path}): {e}")
+                    try:
+                        print(f"同期エラー ({relative_path}): {e}")
+                    except UnicodeEncodeError:
+                        print(f"同期エラー: {e}")
     
     print("-" * 50)
     print(f"GitHubフォルダ同期完了: {sync_count}件")
@@ -335,11 +341,17 @@ def create_distribution_zip(project_root, output_dir):
                 if should_include_file(file_path, project_root):
                     relative_path = os.path.relpath(file_path, project_root)
                     zipf.write(file_path, relative_path)
-                    print(f"追加: {relative_path}")
+                    try:
+                        print(f"追加: {relative_path}")
+                    except UnicodeEncodeError:
+                        print(f"追加: [ファイル名表示エラー]")
                     file_count += 1
                 else:
                     relative_path = os.path.relpath(file_path, project_root)
-                    print(f"除外: {relative_path}")
+                    try:
+                        print(f"除外: {relative_path}")
+                    except UnicodeEncodeError:
+                        print(f"除外: [ファイル名表示エラー]")
     
     print("-" * 50)
     print(f"基本zipファイル作成完了: {basic_zip_filename}")
