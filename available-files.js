@@ -4,8 +4,14 @@ window.availableFiles = {
     {
       "name": "PromptGenerator.zip",
       "url": "downloads/PromptGenerator.zip",
-      "size": 754941,
-      "lastModified": "2025-11-10T14:58:22.924978"
+      "size": 764182,
+      "lastModified": "2026-01-12T19:59:49.766000"
+    },
+    {
+      "name": "PromptGenerator_v1.0.0_20260112_195949.zip",
+      "url": "downloads/PromptGenerator_v1.0.0_20260112_195949.zip",
+      "size": 764182,
+      "lastModified": "2026-01-12T19:59:49.766000"
     },
     {
       "name": "PromptGenerator_v1.0.0_20251110_145822.zip",
@@ -32,6 +38,6 @@ window.availableFiles = {
       "lastModified": "2025-08-01T09:49:47.808720"
     }
   ],
-  "updated": "2025-11-10T14:58:22.934028",
-  "count": 5
+  "updated": "2026-01-12T19:59:49.769844",
+  "count": 6
 };
