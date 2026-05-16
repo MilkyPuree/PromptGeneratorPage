@@ -95,14 +95,19 @@ def should_include_file(file_path, base_path):
     return False
 
 def get_version_from_manifest(project_root):
-    """manifest.jsonからバージョン情報を取得"""
+    """manifest.jsonからバージョン情報を取得
+
+    BOM付きUTF-8でも読めるよう utf-8-sig を使用。
+    エラー時は黙ってフォールバックせず、明示的に例外を上げる
+    （CLAUDE.md: データ不備に対するフォールバック禁止）
+    """
     manifest_path = os.path.join(project_root, 'manifest.json')
-    try:
-        with open(manifest_path, 'r', encoding='utf-8') as f:
-            manifest = json.load(f)
-            return manifest.get('version', '1.0.0')
-    except Exception:
-        return '1.0.0'
+    with open(manifest_path, 'r', encoding='utf-8-sig') as f:
+        manifest = json.load(f)
+    version = manifest.get('version')
+    if not version:
+        raise ValueError(f"manifest.json に version フィールドが見つかりません: {manifest_path}")
+    return version
 
 def sync_to_github_folder(project_root, script_dir):
     """プロジェクトファイルを配布ページのGitHubフォルダに同期"""
